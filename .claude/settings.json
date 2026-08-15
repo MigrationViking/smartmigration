@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run lint)",
+      "Bash(nextcloud.occ app:*)",
+      "Bash(nextcloud.occ config:system:get*)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(tail*)"
+    ],
+    "ask": [
+      "Bash(git push*)",
+      "Bash(nextcloud.occ upgrade)"
+    ]
+  }
+}
