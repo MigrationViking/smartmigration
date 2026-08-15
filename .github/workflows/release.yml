@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - run: npm ci && npm run build
+      - run: composer install --no-dev --optimize-autoloader
+
+      - name: Package
+        run: |
+          cd ..
+          tar czf smartmigration.tar.gz \
+            --exclude='smartmigration/.git' \
+            --exclude='smartmigration/.github' \
+            --exclude='smartmigration/node_modules' \
+            --exclude='smartmigration/src' \
+            --exclude='smartmigration/tests' \
+            --exclude='smartmigration/vendor-bin' \
+            --exclude='smartmigration/package*.json' \
+            --exclude='smartmigration/*.config.*' \
+            --exclude='smartmigration/tsconfig.json' \
+            --exclude='smartmigration/psalm.xml' \
+            --exclude='smartmigration/rector.php' \
+            smartmigration
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: ../smartmigration.tar.gz
+
+# TODO once the certificate arrives (PR #1161):
+#   add a signing step running occ integrity:sign-app,
+#   with the private key stored as repository secret NC_SIGNING_KEY
