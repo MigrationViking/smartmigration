@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>smartmigration</id>
+	<name>Smart Migration</name>
+	<summary>Migrate SharePoint, OneDrive, Teams and file shares to Nextcloud — with deep discovery and interactive BI</summary>
+	<description><![CDATA[Provides a Nextcloud interface for defining and monitoring MigrateDMS
+SMART Migration jobs.
+
+Create a job for each SharePoint, OneDrive or Teams document library — or
+file share — and run deep file discovery before you move anything. Interactive
+business intelligence shows exactly what's there: volume, age, structure and
+the content that needs attention first. You plan the migration on a complete
+picture of your data.
+
+The same reporting tracks progress while the migration runs, and becomes your
+documentation of what was moved once it's done.
+
+Discovery, migration and run history all stay visible in Nextcloud, with
+reports delivered to Nextcloud Files.
+
+Requires SMART Migration. See https://www.migratedms.com]]></description>
+	<version>1.0.0</version>
+	<licence>AGPL-3.0-or-later</licence>
+	<author mail="sj@migratedms.com" homepage="https://migratedms.com">Steen Jakobsen</author>
+	<namespace>SmartMigration</namespace>
+	<category>files</category>
+	<category>integration</category>
+	<category>tools</category>
+	<bugs>https://github.com/MigrationViking/smartmigration/issues</bugs>
+	<dependencies>
+		<nextcloud min-version="31" max-version="34"/>
+	</dependencies>
+	<navigations>
+		<navigation>
+			<id>smartmigration</id>
+			<name>Smart Migration</name>
+			<route>smartmigration.page.index</route>
+			<icon>app.svg</icon>
+			<type>link</type>
+		</navigation>
+	</navigations>
+</info>
