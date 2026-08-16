@@ -6,7 +6,7 @@ import NcContent from '@nextcloud/vue/components/NcContent'
 <template>
 	<NcContent app-name="smartmigration">
 		<NcAppContent :class="$style.content">
-			<h2>Hello world!</h2>
+			<h2>Hello Everyone2a!</h2>
 		</NcAppContent>
 	</NcContent>
 </template>
