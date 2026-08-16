@@ -4,7 +4,7 @@ Read this before making changes. It is the working brief for this repo.
 
 ## What this app is
 
-A Nextcloud app that replaces the Microsoft Teams / SharePoint list layer of
+A Nextcloud app that is a paralel to the Microsoft Teams / SharePoint list layer of
 MigrateDMS **Content Governance**.
 
 Today, Content Governance stores migration job definitions as items in SharePoint
@@ -16,11 +16,13 @@ This app reproduces that contract inside Nextcloud. Nothing else changes about h
 SMART Migration works.
 
 Sources in scope: SharePoint / SharePoint Online, OneDrive for Business, Teams
-document libraries, and file shares. Files only — no email, no calendar.
+document libraries, and file shares. Files only — no email, no calendar. However, we are in process of integrating external service for emil and calendar migration.
 
 The product story is discovery and interactive business intelligence before,
 during, and after migration — not just moving bytes. Discovery-only jobs are a
 complete, valid outcome, not an unfinished migration.
+
+The Business intelligence data is maintained by SMART Migration and is using MS Power BI.
 
 ## Hard architectural rules
 
@@ -67,24 +69,23 @@ Four tables, mirroring the Content Governance list structure. Prefix
 `smartmig_` (Nextcloud prepends `oc_`). Keep identifiers short — Oracle support
 caps them at 30 characters.
 
-Content Governance job types today: Migration, Offload, Restore, Report,
-Import Action Items. Plus Run History.
+Content Governance job types today: Discovery ,Migration, Import Jobs
 
-> **TODO — not yet decided.** The four tables and their columns are not pinned
+> **TODO — not yet decided.** The required tables and their columns are not pinned
 > down. Derive them from the existing SharePoint list schemas rather than
-> inventing them, so SMART needs no new mapping logic and the existing Power BI
-> model keeps working.
+> inventing them. Rename columns more intitively since the MS Teams lists have evolved over time.
+
 
 Every table gets `id`, `created_at`, `updated_at` (bigint unix), `created_by`
 (uid, string 64). Job tables also get `status` (string 32) — the field SMART
 writes back.
 
-A job's source is a **type plus type-specific fields**, not a library URL. A file
-share is a UNC path with no site, library, or tenant.
+A job's source a library URL ora file share is a UNC.
 
 Run-history rows are a retention artifact — people will read them years later to
 answer "where did this file come from". Treat them as immutable once written and
 do not prune them on a schedule.
+There must be a link from the job to all runhistory rows.
 
 ## API contract
 
@@ -97,8 +98,8 @@ POST   /api/v1/runs                     -> create run-history row
 PATCH  /api/v1/runs/{id}                -> progress during a run
 ```
 
-- **Exactly one SMART instance polls this app, and it does not auto-retry.** No
-  job claiming, no locking, no idempotency keys. Do not add them speculatively.
+- **Multiple SMART instancejobs polls this app, **
+  job claiming required, 
   If that assumption changes, revisit this section first.
 - **Whitelist filter and sort columns.** Never build SQL from client-supplied
   column names.
@@ -123,6 +124,7 @@ Development happens directly on a Hostinger VPS — there is no local environmen
 - Logs: `/var/snap/nextcloud/current/nextcloud/data/nextcloud.log`. Xdebug is not
   practical under snap confinement, so `tail -f` on that log is the debugger.
 
+
 ## Codebase conventions
 
 - PHP 8.3, namespace `OCA\SmartMigration\`.
@@ -138,6 +140,25 @@ Development happens directly on a Hostinger VPS — there is no local environmen
 - Frontend: Vue 3 + TypeScript, built with Vite. `npm run build` outputs to `js/`
   and `css/`, both gitignored.
 
+  // STEEN dev. info -------------------
+  When changesa are don in github - make pull on vps terminal
+    cd /var/snap/nextcloud/current/nextcloud/extra-apps/smartmigration
+    git pull
+
+  If changes made on vps and commioted from there server
+    git config --global pull.rebase true
+    git pull
+
+  Gow to build:
+    npm run build     # production  ctrrl.f5 til reload i browser
+    Or leave npm run watch running in a spare terminal and it rebuilds on every save — then you only need the hard reload.
+
+    appinfo/info.xml — needs the app reloaded.
+    nextcloud.occ app:disable smartmigration && nextcloud.occ app:enable smartmigration
+
+    Always npm run build before a release tag.
+ -------------------------------------
+
 ## Reference implementations on this box
 
 Other apps are installed alongside this one in `extra-apps/`. Read them for house
@@ -149,17 +170,22 @@ style rather than working from generic tutorials:
 
 ## Frontend design
 
+## SMART Migration Dependency
+SMART Migration is required to be installed in the customeres infrastructure with MS App Registration using a pfx or installed cert fro access to the MS tenant. For SharePoint on-prem NTLM auth is used.
+
 **Look native, not distinctive.** This app should be indistinguishable from a
 first-party Nextcloud app. Use `NcAppContent`, `NcAppNavigation`, `NcButton`,
 `NcModal`, `NcLoadingIcon`, `NcEmptyContent` from `@nextcloud/vue`. No custom
 design system, no CSS framework, no custom color tokens — server CSS variables
 (`--color-primary`, `--color-main-background`) give theming and dark mode free.
 
+- UI Must support English, German,French,Danish and make room for other languages.
+
 The UI's job: let a migration consultant define, review, and monitor job rows —
 the same task they do in a Teams list today.
 
 Empty states matter. A fresh install has no jobs and no runs; that screen should
-say how to create the first job, not "no data".
+say how to create the first job, not "no data". And the screen should list partneres to contact in order to get the required SMART Migration installer and trial license key.
 
 ## Distribution
 
