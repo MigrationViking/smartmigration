@@ -10,3 +10,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - First release
+
+- Vite 8 becomes available when @nextcloud/vite-config bumps its peer range. Worth checking whenever you widen your supported Nextcloud versions.
