@@ -143,6 +143,121 @@
                     }
                 }
             }
+        },
+        "/ocs/v2.php/apps/smartmigration/api/v1/version": {
+            "get": {
+                "operationId": "api-version",
+                "summary": "Report app and Nextcloud version",
+                "description": "Lets SMART Migration check compatibility before it starts polling for jobs.",
+                "tags": [
+                    "api"
+                ],
+                "security": [
+                    {
+                        "bearer_auth": []
+                    },
+                    {
+                        "basic_auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "OCS-APIRequest",
+                        "in": "header",
+                        "description": "Required to be true for the API request to pass",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Version info returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "appId",
+                                                        "appVersion",
+                                                        "apiVersion",
+                                                        "nextcloudVersion",
+                                                        "nextcloudVersionMajor"
+                                                    ],
+                                                    "properties": {
+                                                        "appId": {
+                                                            "type": "string"
+                                                        },
+                                                        "appVersion": {
+                                                            "type": "string"
+                                                        },
+                                                        "apiVersion": {
+                                                            "type": "string"
+                                                        },
+                                                        "nextcloudVersion": {
+                                                            "type": "string"
+                                                        },
+                                                        "nextcloudVersionMajor": {
+                                                            "type": "integer",
+                                                            "format": "int64"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Current user is not logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "ocs"
+                                    ],
+                                    "properties": {
+                                        "ocs": {
+                                            "type": "object",
+                                            "required": [
+                                                "meta",
+                                                "data"
+                                            ],
+                                            "properties": {
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/OCSMeta"
+                                                },
+                                                "data": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "tags": []

@@ -42,7 +42,7 @@ Two consumers:
 
 | Consumer | Path | Auth |
 |---|---|---|
-| Human users (Vue UI) | `/apps/smartmigration/...` | Normal Nextcloud session |
+| Human users (Vue UI) | Nextcloud Administration settings (`Settings\Admin`/`Settings\Section`), not a top-nav app | Normal Nextcloud session, admin |
 | SMART Migration | `/ocs/v2.php/apps/smartmigration/api/...` | App password over Basic |
 
 ## Authentication
@@ -123,6 +123,10 @@ Development happens directly on a Hostinger VPS — there is no local environmen
   npm 11. The template requires Node ^24 — Node 22 warns and eventually breaks.
 - Logs: `/var/snap/nextcloud/current/nextcloud/data/nextcloud.log`. Xdebug is not
   practical under snap confinement, so `tail -f` on that log is the debugger.
+- **The snap ships no `tests/` directory** — it's a packaged production build, not
+  a git clone of `nextcloud/server`. Don't write app tests that assume a core
+  `tests/bootstrap.php` exists three levels up; it never will on this box. See
+  the unit-testing note under Codebase conventions.
 
 
 ## Codebase conventions
@@ -137,6 +141,13 @@ Development happens directly on a Hostinger VPS — there is no local environmen
   `ISchemaWrapper`. **Migrations are append-only — never edit a shipped one.**
 - Constructor-based dependency injection. Never `\OC::$server`.
 - All user-facing strings through `t()` / `IL10N`.
+- **Unit tests are isolated, not integration tests.** `tests/bootstrap.php` only
+  requires the app's own Composer autoloader — no core bootstrap, no
+  `\OC_App::loadApp()`. `OCP\*`/`NCU\*` classes resolve at test time via an
+  `autoload-dev` PSR-4 mapping onto the `nextcloud/ocp` stub package (already a
+  `require-dev` dependency), which is dropped from any `--no-dev` build. If a
+  class needs a live server to test, that's a signal it's reaching for
+  `\OC::$server` or similar — fix the class, don't reintroduce a core bootstrap.
 - Frontend: Vue 3 + TypeScript, built with Vite. `npm run build` outputs to `js/`
   and `css/`, both gitignored.
 
@@ -180,6 +191,8 @@ design system, no CSS framework, no custom color tokens — server CSS variables
 (`--color-primary`, `--color-main-background`) give theming and dark mode free.
 
 - UI Must support English, German,French,Danish and make room for other languages.
+
+-UI The UI controls must be the latest Nextcloud native controls - not something else. The app must be complinet to Nextcloud and have the best possible look a like other native nextcloud apps and MetaVox.
 
 The UI's job: let a migration consultant define, review, and monitor job rows —
 the same task they do in a Teams list today.

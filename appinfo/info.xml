@@ -28,13 +28,8 @@ Requires SMART Migration. See https://www.migratedms.com
 	<dependencies>
 		<nextcloud min-version="33" max-version="35"/>
 	</dependencies>
-	<navigations>
-		<navigation>
-			<id>smartmigration</id>
-			<name>SMART Migration</name>
-			<route>smartmigration.page.index</route>
-			<icon>app.svg</icon>
-			<type>link</type>
-		</navigation>
-	</navigations>
+	<settings>
+		<admin>OCA\SmartMigration\Settings\Admin</admin>
+		<admin-section>OCA\SmartMigration\Settings\Section</admin-section>
+	</settings>
 </info>
