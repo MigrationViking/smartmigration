@@ -1,4 +1,4 @@
-in the row-menu for the menu item "Delete" pls. add a confirmation dialog box saying som thing like "Are you sure you want to delete 
+
 
 When 2 or more rows are selected and the status changes the the changes dtatus is replicated to the other selected rows. Thai is 100% perfect. Now add tyhe same value replication for the columns ScheduledDate and Group.
 

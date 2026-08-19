@@ -27,11 +27,16 @@ const dialogSaving = ref(false)
 
 const selectedIds = ref<Set<number>>(new Set())
 const deleteConfirmOpen = ref(false)
+const deleteTarget = ref<Job | null>(null)
 const deleting = ref(false)
 const lastSelectedIndex = ref<number | null>(null)
 let pendingShiftKey = false
 
 const allSelected = computed(() => filteredJobs().length > 0 && filteredJobs().every((job) => selectedIds.value.has(job.id)))
+
+const deleteConfirmMessage = computed(() => deleteTarget.value
+	? t('smartmigration', 'Are you sure you want to delete "{title}"?', { title: deleteTarget.value.title })
+	: n('smartmigration', 'Are you sure you want to delete %n selected job?', 'Are you sure you want to delete %n selected jobs?', selectedIds.value.size))
 
 function errorMessage(error: unknown, fallback: string): string {
 	const response = (error as { response?: { data?: { message?: string } } })?.response
@@ -137,36 +142,32 @@ async function copyRow(job: Job) {
 	}
 }
 
-async function deleteRow(job: Job) {
-	try {
-		await deleteJob(job.id)
-		await load()
-		showSuccess(t('smartmigration', 'Job deleted.'))
-	} catch (error) {
-		console.error('Failed to delete job', error)
-		showError(errorMessage(error, t('smartmigration', 'Could not delete the job.')))
-	}
+function requestDeleteRow(job: Job) {
+	deleteTarget.value = job
+	deleteConfirmOpen.value = true
 }
 
 function requestDeleteSelected() {
 	if (selectedIds.value.size === 0) {
 		return
 	}
+	deleteTarget.value = null
 	deleteConfirmOpen.value = true
 }
 
-async function confirmDeleteSelected() {
+async function confirmDelete() {
 	deleting.value = true
 	try {
-		const ids = [...selectedIds.value]
+		const ids = deleteTarget.value ? [deleteTarget.value.id] : [...selectedIds.value]
 		await Promise.all(ids.map((id) => deleteJob(id)))
 		deleteConfirmOpen.value = false
+		deleteTarget.value = null
 		selectedIds.value = new Set()
 		await load()
 		showSuccess(n('smartmigration', '%n job deleted.', '%n jobs deleted.', ids.length))
 	} catch (error) {
 		console.error('Failed to delete jobs', error)
-		showError(errorMessage(error, t('smartmigration', 'Could not delete the selected jobs.')))
+		showError(errorMessage(error, t('smartmigration', 'Could not delete the job(s).')))
 		await load()
 	} finally {
 		deleting.value = false
@@ -389,7 +390,7 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 							<NcActionButton @click="copyRow(job)">
 								{{ t('smartmigration', 'Copy') }}
 							</NcActionButton>
-							<NcActionButton @click="deleteRow(job)">
+							<NcActionButton @click="requestDeleteRow(job)">
 								{{ t('smartmigration', 'Delete') }}
 							</NcActionButton>
 						</NcActions>
@@ -413,14 +414,14 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 
 		<NcDialog :open="deleteConfirmOpen"
 			:name="t('smartmigration', 'Delete jobs')"
-			:message="n('smartmigration', 'Are you sure you want to delete %n selected job?', 'Are you sure you want to delete %n selected jobs?', selectedIds.size)"
+			:message="deleteConfirmMessage"
 			:can-close="!deleting"
-			@update:open="deleteConfirmOpen = $event">
+			@update:open="deleteConfirmOpen = $event; if (!$event) deleteTarget = null">
 			<template #actions>
-				<NcButton :disabled="deleting" @click="deleteConfirmOpen = false">
+				<NcButton :disabled="deleting" @click="deleteConfirmOpen = false; deleteTarget = null">
 					{{ t('smartmigration', 'Cancel') }}
 				</NcButton>
-				<NcButton variant="error" :disabled="deleting" @click="confirmDeleteSelected">
+				<NcButton variant="error" :disabled="deleting" @click="confirmDelete">
 					{{ deleting ? t('smartmigration', 'Deleting …') : t('smartmigration', 'Delete') }}
 				</NcButton>
 			</template>
