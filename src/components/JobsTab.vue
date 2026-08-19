@@ -33,6 +33,7 @@ const lastSelectedIndex = ref<number | null>(null)
 let pendingShiftKey = false
 
 const allSelected = computed(() => filteredJobs().length > 0 && filteredJobs().every((job) => selectedIds.value.has(job.id)))
+const bulkEditActive = computed(() => selectedIds.value.size > 1)
 
 const deleteConfirmMessage = computed(() => deleteTarget.value
 	? t('smartmigration', 'Are you sure you want to delete "{title}"?', { title: deleteTarget.value.title })
@@ -326,12 +327,20 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 							:aria-label="t('smartmigration', 'Select all jobs')"
 							@update:model-value="toggleSelectAll" />
 					</th>
-					<th>{{ t('smartmigration', 'Title') }}</th>
+					<th class="jobs-tab__title-col">
+						{{ t('smartmigration', 'Title') }}
+					</th>
 					<th>{{ t('smartmigration', 'Mode') }}</th>
-					<th>{{ t('smartmigration', 'Status') }}</th>
-					<th>{{ t('smartmigration', 'Scheduled Date') }}</th>
+					<th :class="{ 'jobs-tab__bulk-column': bulkEditActive }">
+						{{ t('smartmigration', 'Status') }}
+					</th>
+					<th :class="{ 'jobs-tab__bulk-column': bulkEditActive }">
+						{{ t('smartmigration', 'Scheduled Date') }}
+					</th>
 					<th>{{ t('smartmigration', 'Result') }}</th>
-					<th>{{ t('smartmigration', 'Group') }}</th>
+					<th :class="{ 'jobs-tab__bulk-column': bulkEditActive }">
+						{{ t('smartmigration', 'Group') }}
+					</th>
 					<th class="jobs-tab__menu-col" />
 				</tr>
 			</thead>
@@ -343,7 +352,7 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 							@update:model-value="toggleSelected(job, $event)" />
 					</td>
 					<td>
-						<NcTextField class="jobs-tab__inline-field"
+						<NcTextField class="jobs-tab__inline-field jobs-tab__title-col"
 							label-outside
 							:model-value="job.title"
 							:placeholder="t('smartmigration', 'Title')"
@@ -469,6 +478,10 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 	width: 44px;
 }
 
+.jobs-tab__table th.jobs-tab__bulk-column {
+	color: var(--color-error-text, var(--color-error));
+}
+
 .jobs-tab__select-col {
 	width: 44px;
 	padding-inline-end: 0;
@@ -480,6 +493,10 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 
 .jobs-tab__inline-field {
 	min-width: 140px;
+}
+
+.jobs-tab__title-col {
+	min-width: 350px;
 }
 
 .jobs-tab__selection-hint {
