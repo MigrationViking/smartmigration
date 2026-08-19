@@ -1,8 +1,9 @@
 in the row-menu for the menu item "Delete" pls. add a confirmation dialog box saying som thing like "Are you sure you want to delete 
-add support for the Shift key to range selection of rows. So when one row is selected via the checkbox and the shift key is then pressed while clicling another row down or up relative to the one just selected then all the rows bewtenn and the selected should be selected.
+
+When 2 or more rows are selected and the status changes the the changes dtatus is replicated to the other selected rows. Thai is 100% perfect. Now add tyhe same value replication for the columns ScheduledDate and Group.
 
 
-the rowlevel ... menu shuld also have a menu item "New" to create a new job. There should be s seperator line between "New" and "Edit"
+
 
 
 

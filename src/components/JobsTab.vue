@@ -6,13 +6,16 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActionRadio from '@nextcloud/vue/components/NcActionRadio'
+import NcActionSeparator from '@nextcloud/vue/components/NcActionSeparator'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import JobEditDialog from './JobEditDialog.vue'
 import { type Job, type JobInput, copyJob, createJob, deleteJob, fetchJobs, patchJob, updateJob } from '../api/jobs'
+import { fromDatePicker, toDate } from '../utils/datetime'
 
 const jobs = ref<Job[]>([])
 const loading = ref(true)
@@ -25,6 +28,8 @@ const dialogSaving = ref(false)
 const selectedIds = ref<Set<number>>(new Set())
 const deleteConfirmOpen = ref(false)
 const deleting = ref(false)
+const lastSelectedIndex = ref<number | null>(null)
+let pendingShiftKey = false
 
 const allSelected = computed(() => filteredJobs().length > 0 && filteredJobs().every((job) => selectedIds.value.has(job.id)))
 
@@ -39,6 +44,7 @@ async function load() {
 		jobs.value = await fetchJobs()
 		const validIds = new Set(jobs.value.map((job) => job.id))
 		selectedIds.value = new Set([...selectedIds.value].filter((id) => validIds.has(id)))
+		lastSelectedIndex.value = null
 	} catch (error) {
 		console.error('Failed to load jobs', error)
 		showError(errorMessage(error, t('smartmigration', 'Could not load the job list.')))
@@ -62,14 +68,43 @@ function isSelected(job: Job): boolean {
 	return selectedIds.value.has(job.id)
 }
 
+function bulkTargets(job: Job): Job[] {
+	return selectedIds.value.size > 1 && selectedIds.value.has(job.id)
+		? jobs.value.filter((candidate) => selectedIds.value.has(candidate.id))
+		: [job]
+}
+
+function rememberShiftKey(event: MouseEvent) {
+	pendingShiftKey = event.shiftKey
+}
+
 function toggleSelected(job: Job, selected: boolean) {
+	const rows = filteredJobs()
+	const index = rows.findIndex((row) => row.id === job.id)
+	const shiftKey = pendingShiftKey
+	pendingShiftKey = false
+
 	const next = new Set(selectedIds.value)
-	if (selected) {
+
+	if (shiftKey && lastSelectedIndex.value !== null && index !== -1) {
+		const [start, end] = [lastSelectedIndex.value, index].sort((a, b) => a - b)
+		for (let i = start; i <= end; i++) {
+			if (selected) {
+				next.add(rows[i].id)
+			} else {
+				next.delete(rows[i].id)
+			}
+		}
+	} else if (selected) {
 		next.add(job.id)
 	} else {
 		next.delete(job.id)
 	}
+
 	selectedIds.value = next
+	if (index !== -1) {
+		lastSelectedIndex.value = index
+	}
 }
 
 function toggleSelectAll(selected: boolean) {
@@ -78,13 +113,7 @@ function toggleSelectAll(selected: boolean) {
 	} else {
 		selectedIds.value = new Set()
 	}
-}
-
-function formatDate(value: number): string {
-	if (!value) {
-		return ''
-	}
-	return new Date(value * 1000).toLocaleString()
+	lastSelectedIndex.value = null
 }
 
 function openCreateDialog() {
@@ -182,12 +211,8 @@ async function updateStatus(job: Job, status: Job['status']) {
 	if (status === job.status) {
 		return
 	}
-
-	const targets = selectedIds.value.size > 1 && selectedIds.value.has(job.id)
-		? jobs.value.filter((candidate) => selectedIds.value.has(candidate.id))
-		: [job]
-
-	const previousStatuses = new Map(targets.map((target) => [target.id, target.status]))
+	const targets = bulkTargets(job)
+	const previous = new Map(targets.map((target) => [target.id, target.status]))
 	targets.forEach((target) => {
 		target.status = status
 	})
@@ -199,7 +224,7 @@ async function updateStatus(job: Job, status: Job['status']) {
 		}
 	} catch (error) {
 		targets.forEach((target) => {
-			target.status = previousStatuses.get(target.id) ?? target.status
+			target.status = previous.get(target.id) ?? target.status
 		})
 		console.error('Failed to update job status', error)
 		showError(errorMessage(error, t('smartmigration', 'Could not update the status.')))
@@ -211,14 +236,48 @@ async function updateGroup(job: Job, group: string) {
 	if (normalized === job.group) {
 		return
 	}
-	const previous = job.group
-	job.group = normalized
+	const targets = bulkTargets(job)
+	const previous = new Map(targets.map((target) => [target.id, target.group]))
+	targets.forEach((target) => {
+		target.group = normalized
+	})
+
 	try {
-		await patchJob(job.id, { group: normalized })
+		await Promise.all(targets.map((target) => patchJob(target.id, { group: normalized })))
+		if (targets.length > 1) {
+			showSuccess(n('smartmigration', 'Updated group for %n job.', 'Updated group for %n jobs.', targets.length))
+		}
 	} catch (error) {
-		job.group = previous
+		targets.forEach((target) => {
+			target.group = previous.get(target.id) ?? target.group
+		})
 		console.error('Failed to update job group', error)
 		showError(errorMessage(error, t('smartmigration', 'Could not update the group.')))
+	}
+}
+
+async function updateScheduledDate(job: Job, date: Date | null) {
+	const scheduledDate = fromDatePicker(date)
+	if (scheduledDate === null || scheduledDate === job.scheduledDate) {
+		return
+	}
+	const targets = bulkTargets(job)
+	const previous = new Map(targets.map((target) => [target.id, target.scheduledDate]))
+	targets.forEach((target) => {
+		target.scheduledDate = scheduledDate
+	})
+
+	try {
+		await Promise.all(targets.map((target) => patchJob(target.id, { scheduledDate })))
+		if (targets.length > 1) {
+			showSuccess(n('smartmigration', 'Updated scheduled date for %n job.', 'Updated scheduled date for %n jobs.', targets.length))
+		}
+	} catch (error) {
+		targets.forEach((target) => {
+			target.scheduledDate = previous.get(target.id) ?? target.scheduledDate
+		})
+		console.error('Failed to update job scheduled date', error)
+		showError(errorMessage(error, t('smartmigration', 'Could not update the scheduled date.')))
 	}
 }
 </script>
@@ -277,7 +336,7 @@ async function updateGroup(job: Job, group: string) {
 			</thead>
 			<tbody>
 				<tr v-for="job in filteredJobs()" :key="job.id" class="jobs-tab__row">
-					<td class="jobs-tab__select-col">
+					<td class="jobs-tab__select-col" @click.capture="rememberShiftKey($event)">
 						<NcCheckboxRadioSwitch :model-value="isSelected(job)"
 							:aria-label="t('smartmigration', 'Select job {title}', { title: job.title })"
 							@update:model-value="toggleSelected(job, $event)" />
@@ -302,7 +361,14 @@ async function updateGroup(job: Job, group: string) {
 							</NcActionRadio>
 						</NcActions>
 					</td>
-					<td>{{ formatDate(job.scheduledDate) }}</td>
+					<td>
+						<NcDateTimePickerNative class="jobs-tab__inline-field"
+							:model-value="toDate(job.scheduledDate)"
+							type="datetime-local"
+							:label="t('smartmigration', 'Scheduled Date')"
+							label-outside
+							@update:model-value="updateScheduledDate(job, $event)" />
+					</td>
 					<td>{{ job.result }}</td>
 					<td>
 						<NcTextField class="jobs-tab__inline-field"
@@ -313,6 +379,10 @@ async function updateGroup(job: Job, group: string) {
 					</td>
 					<td class="jobs-tab__menu-col">
 						<NcActions :aria-label="t('smartmigration', 'Job row actions')">
+							<NcActionButton @click="openCreateDialog">
+								{{ t('smartmigration', 'New') }}
+							</NcActionButton>
+							<NcActionSeparator />
 							<NcActionButton @click="openEditDialog(job)">
 								{{ t('smartmigration', 'Edit') }}
 							</NcActionButton>

@@ -99,6 +99,20 @@ final class JobsControllerTest extends TestCase {
 		$this->assertEquals('Group 2', $data['group']);
 	}
 
+	public function testPatchUpdatesScheduledDate(): void {
+		$job = new Job();
+		$job->setTitle('Discover LibA');
+		$job->setScheduledDate(1000);
+
+		$this->jobMapper->method('find')->willReturn($job);
+		$this->jobMapper->method('update')
+			->willReturnCallback(static fn (Job $job) => $job);
+
+		$data = $this->controller->patch(1, scheduledDate: 2000)->getData();
+
+		$this->assertEquals(2000, $data['scheduledDate']);
+	}
+
 	public function testCopyResetsStatusToHold(): void {
 		$source = new Job();
 		$source->setTitle('Discover LibA');

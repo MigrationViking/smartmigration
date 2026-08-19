@@ -8,6 +8,7 @@ import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
 import type { Job, JobInput } from '../api/jobs'
+import { fromDatePicker, toDate } from '../utils/datetime'
 
 const props = defineProps<{
 	open: boolean
@@ -80,14 +81,6 @@ watch(() => [props.open, props.job], () => {
 }, { immediate: true })
 
 const dialogName = computed(() => props.job ? t('smartmigration', 'Edit job') : t('smartmigration', 'Create new job'))
-
-function toDate(value: number | null): Date | null {
-	return value ? new Date(value * 1000) : null
-}
-
-function fromDatePicker(value: Date | null): number | null {
-	return value ? Math.floor(value.getTime() / 1000) : null
-}
 
 function close() {
 	emit('update:open', false)

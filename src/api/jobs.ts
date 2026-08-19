@@ -56,7 +56,7 @@ export async function updateJob(id: number, job: JobInput): Promise<Job> {
 	return data
 }
 
-export async function patchJob(id: number, patch: Partial<Pick<Job, 'title' | 'status' | 'group'>>): Promise<Job> {
+export async function patchJob(id: number, patch: Partial<Pick<Job, 'title' | 'status' | 'group' | 'scheduledDate'>>): Promise<Job> {
 	const { data } = await axios.patch<Job>(url(`/${id}`), patch)
 	return data
 }

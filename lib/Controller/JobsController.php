@@ -174,12 +174,18 @@ class JobsController extends Controller {
 
 	/**
 	 * Quick update used by the browse-view table, which only allows editing
-	 * Title, Status and Group inline.
+	 * Title, Status, Scheduled Date and Group inline.
 	 *
 	 * @return DataResponse<Http::STATUS_OK|Http::STATUS_NOT_FOUND, array<string, mixed>, array{}>
 	 */
 	#[FrontpageRoute(verb: 'PATCH', url: '/settings/jobs/{id}')]
-	public function patch(int $id, ?string $title = null, ?string $status = null, ?string $group = null): DataResponse {
+	public function patch(
+		int $id,
+		?string $title = null,
+		?string $status = null,
+		?string $group = null,
+		?int $scheduledDate = null,
+	): DataResponse {
 		try {
 			$job = $this->jobMapper->find($id);
 		} catch (DoesNotExistException) {
@@ -194,6 +200,9 @@ class JobsController extends Controller {
 		}
 		if ($group !== null) {
 			$job->setGroupName($group);
+		}
+		if ($scheduledDate !== null) {
+			$job->setScheduledDate($scheduledDate);
 		}
 		$job->setUpdatedAt(time());
 
