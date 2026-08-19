@@ -6,7 +6,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import JobsTab from './components/JobsTab.vue'
 
-type TabId = 'home' | 'jobs' | 'runs' | 'settings' | 'support'
+type TabId = 'home' | 'jobs' | 'runs' | 'settings' | 'partners' | 'support'
 
 const tabs: { id: TabId, label: string }[] = [
 	{ id: 'home', label: t('smartmigration', 'Home') },
@@ -14,6 +14,7 @@ const tabs: { id: TabId, label: string }[] = [
 	{ id: 'runs', label: t('smartmigration', 'Run History') },
 	{ id: 'settings', label: t('smartmigration', 'Settings') },
 	{ id: 'support', label: t('smartmigration', 'Support') },
+	{ id: 'partners', label: t('smartmigration', 'Partners') },
 ]
 
 const activeTab = ref<TabId>('home')
@@ -76,14 +77,7 @@ function mailtoLink(email: string): string {
 				:name="t('smartmigration', 'Settings')"
 				:description="t('smartmigration', 'License information and general settings will live here.')" />
 
-			<div v-else class="smartmigration-support">
-				<NcButton href="https://migratedms.com/pages/nextcloud"
-					target="_blank"
-					:title="t('smartmigration', 'Opens the MigrateDMS AI Support page in a new tab')">
-					{{ t('smartmigration', 'AI Support') }}
-				</NcButton>
-
-				<h3>{{ t('smartmigration', 'Partners') }}</h3>
+			<div v-else-if="activeTab === 'partners'" class="smartmigration-partners-tab">
 				<table class="smartmigration-partners">
 					<thead>
 						<tr>
@@ -112,6 +106,14 @@ function mailtoLink(email: string): string {
 					</tbody>
 				</table>
 			</div>
+
+			<div v-else class="smartmigration-support">
+				<NcButton href="https://migratedms.com/pages/nextcloud"
+					target="_blank"
+					:title="t('smartmigration', 'Opens the MigrateDMS AI Support page in a new tab')">
+					{{ t('smartmigration', 'AI Support') }}
+				</NcButton>
+			</div>
 		</div>
 	</div>
 </template>
@@ -134,14 +136,9 @@ function mailtoLink(email: string): string {
 	min-height: 300px;
 }
 
-.smartmigration-support h3 {
-	margin-top: 24px;
-}
-
 .smartmigration-partners {
 	width: 100%;
 	border-collapse: collapse;
-	margin-top: 8px;
 }
 
 .smartmigration-partners th,
