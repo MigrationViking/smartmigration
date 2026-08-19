@@ -398,6 +398,13 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 			</tbody>
 		</table>
 
+		<p v-if="selectedIds.size === 1" class="jobs-tab__selection-hint">
+			{{ t('smartmigration', 'Tip: hold Shift and select another row to select everything in between.') }}
+		</p>
+		<p v-else-if="selectedIds.size > 1" class="jobs-tab__selection-hint">
+			{{ t('smartmigration', 'Changing Status, Scheduled Date or Group on one selected row applies that change to all selected rows.') }}
+		</p>
+
 		<JobEditDialog :open="dialogOpen"
 			:job="editingJob"
 			:saving="dialogSaving"
@@ -472,5 +479,11 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 
 .jobs-tab__inline-field {
 	min-width: 140px;
+}
+
+.jobs-tab__selection-hint {
+	color: var(--color-text-maxcontrast);
+	font-size: 0.85em;
+	margin: 0;
 }
 </style>
