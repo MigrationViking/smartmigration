@@ -45,3 +45,13 @@ Authorization: Basic <base64(user:app-password)>
 
 No group membership or admin rights are required — any authenticated user
 with a valid app password can call this endpoint.
+
+## Internal admin UI endpoints (not part of this contract)
+
+`lib/Controller/JobsController.php` exposes `/apps/smartmigration/settings/jobs`
+routes (GET, POST, PUT, PATCH, DELETE) that back the Jobs tab in the Vue admin
+UI. They use the normal Nextcloud session + CSRF token, require an admin
+user, and are **not** reachable via app password or the OCS layer. SMART
+Migration itself must not call them — the `/api/v1/jobs` polling endpoints
+described above are the only supported integration surface, and are defined
+separately once that contract is implemented.

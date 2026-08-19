@@ -1,44 +1,8 @@
-Lets make the "jobs" database table (make sure to create the table with compliant name).
-The table will contain 3 job types: "Discovery" and "Test Migration", "Migration" based on the screenshots attached we will only focus on "Discovery" for now. . I have attached multiple screenshots showing different stes of columns to get the full picture for Discovery of all the columns
-The column names should be Pascal notation so that "Scheduled Date" becomes "ScheduledDate" etc.
-
-I want the columns names having "Job" in the name NOT to have "Job" in the name as this is implicit since the column is in the "Jobs" table. So [Job Mode] becomes [Mode].
-
-I want the UI to create/edit the rows to be much like the Nextcloud Tables. So an editble table in the "Jobs" tab with a filter column to filter the job rows.
-Except not all columns are in the visual table. Only [Title],[Mode],[Status],[Scheduled Date],[Result],[Group] The rest of the columns are only visible in the create/edit dialogbox.
-Only [Title] and [Status] can be modifed in the browse view.
-
-There should be a menu {...} (no visual brackets) on the top right of the visual table on top of the column names if not enouth space to display. Currently only 2 menu item namely "Create new","Import". lets define the actions for "Import" later. But the "Create new" menu item should create a new row. The creation or edit of a row should be in a dialogbox just like Nextcloud tables app. (later we will defines conditional validation and visibity for the columns in the create/edit dialogbox)
-
-When a row has focus a menu {...} (no visual brackets) shows to the far right of the row. menu items: Edit,Copy,Delete to do the actions on the row. 
-The description for each column (from the screenshots) goes into the descripion in the edit form.
-The edit-control for each column in the dialogbox should be the same as on the screenshot eg. [Advanced Mode] is a checkbox. Except the SourceURL and SourceUNC columns are NOT multiline but single line evnen they display as multiline in the screenshot.
-The [Mode] (Job Mode) should only have the following values: "Discovery","Test Migration","Migration"
-
-CheckBox has the values: Yes,No
-
-column data types:
-ScheduledDate,FromDate,ToDate = DateTime
-SizeFrom,SizeTo = Numeric(6)
-Title = Text(255)
-Description = Text(2500)
-Group = Text(50)
-AdvancedMode = Text(3)  
-Status = Text(10)
-Recurrence = Text(10)
-Action = Text(15)
-SourceType = Text(20)
-SourceURL = Text(500)
-SourceUNC = Text(1500)
-SourceUPN = text(100)
-SourceFileType = Text(500)
-VersionHistoryScope = Text(30)
-
-Default values when a new row is created buy the user or the API are as on the screenshot. ScheduledDate is CurrentDateTime as default.
-We will make the API later so dont do that now.
+in the row-menu for the menu item "Delete" pls. add a confirmation dialog box saying som thing like "Are you sure you want to delete 
+add support for the Shift key to range selection of rows. So when one row is selected via the checkbox and the shift key is then pressed while clicling another row down or up relative to the one just selected then all the rows bewtenn and the selected should be selected.
 
 
-
+the rowlevel ... menu shuld also have a menu item "New" to create a new job. There should be s seperator line between "New" and "Edit"
 
 
 

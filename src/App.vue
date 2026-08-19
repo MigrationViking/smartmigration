@@ -4,6 +4,7 @@ import { t } from '@nextcloud/l10n'
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import JobsTab from './components/JobsTab.vue'
 
 type TabId = 'home' | 'jobs' | 'runs' | 'settings' | 'support'
 
@@ -65,9 +66,7 @@ function mailtoLink(email: string): string {
 				:name="t('smartmigration', 'Dashboard')"
 				:description="t('smartmigration', 'An overview of running jobs and documentation will live here.')" />
 
-			<NcEmptyContent v-else-if="activeTab === 'jobs'"
-				:name="t('smartmigration', 'Jobs')"
-				:description="t('smartmigration', 'The list of all migration jobs will live here.')" />
+			<JobsTab v-else-if="activeTab === 'jobs'" />
 
 			<NcEmptyContent v-else-if="activeTab === 'runs'"
 				:name="t('smartmigration', 'Run History')"
