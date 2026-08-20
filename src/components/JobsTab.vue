@@ -132,6 +132,21 @@ function openEditDialog(job: Job) {
 	dialogOpen.value = true
 }
 
+/**
+ * Open the edit dialog on double-click, but leave the inline controls alone: double-clicking
+ * a word in the Title or Group field has to keep selecting that word rather than open a dialog.
+ *
+ * @param job - the row that was double-clicked
+ * @param event - the originating double-click
+ */
+function onRowDoubleClick(job: Job, event: MouseEvent) {
+	const target = event.target as HTMLElement | null
+	if (target?.closest('input, textarea, select, button, a, label, .jobs-tab__inline-field')) {
+		return
+	}
+	openEditDialog(job)
+}
+
 async function copyRow(job: Job) {
 	try {
 		await copyJob(job.id)
@@ -345,7 +360,10 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="job in filteredJobs()" :key="job.id" class="jobs-tab__row">
+				<tr v-for="job in filteredJobs()"
+					:key="job.id"
+					class="jobs-tab__row"
+					@dblclick="onRowDoubleClick(job, $event)">
 					<td class="jobs-tab__select-col" @click.capture="rememberShiftKey($event)">
 						<NcCheckboxRadioSwitch :model-value="isSelected(job)"
 							:aria-label="t('smartmigration', 'Select job {title}', { title: job.title })"
@@ -389,10 +407,6 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 					</td>
 					<td class="jobs-tab__menu-col">
 						<NcActions :aria-label="t('smartmigration', 'Job row actions')">
-							<NcActionButton @click="openCreateDialog">
-								{{ t('smartmigration', 'New') }}
-							</NcActionButton>
-							<NcActionSeparator />
 							<NcActionButton @click="openEditDialog(job)">
 								{{ t('smartmigration', 'Edit') }}
 							</NcActionButton>
@@ -401,6 +415,10 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 							</NcActionButton>
 							<NcActionButton @click="requestDeleteRow(job)">
 								{{ t('smartmigration', 'Delete') }}
+							</NcActionButton>
+							<NcActionSeparator />
+							<NcActionButton @click="openCreateDialog">
+								{{ t('smartmigration', 'New') }}
 							</NcActionButton>
 						</NcActions>
 					</td>
