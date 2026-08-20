@@ -102,6 +102,9 @@ const dialogName = computed(() => props.job ? t('smartmigration', 'Edit job') : 
 /** Advanced settings stay in effect when hidden; the toggle only reduces visual clutter. */
 const showAdvanced = computed(() => form.advancedMode === 'Yes')
 
+/** File shares have no version history, so the whole version-history group is irrelevant there. */
+const supportsVersionHistory = computed(() => form.sourceType !== 'FileShare')
+
 function close() {
 	emit('update:open', false)
 }
@@ -271,14 +274,14 @@ function save() {
 				</p>
 			</div>
 
-			<div class="job-edit-form__field">
+			<div v-if="supportsVersionHistory" class="job-edit-form__field">
 				<NcCheckboxRadioSwitch :model-value="form.includeVersionHistory === 'Yes'"
 					@update:model-value="form.includeVersionHistory = $event ? 'Yes' : 'No'">
 					{{ t('smartmigration', 'Include Version History') }}
 				</NcCheckboxRadioSwitch>
 			</div>
 
-			<NcTextField v-if="form.includeVersionHistory === 'Yes'"
+			<NcTextField v-if="supportsVersionHistory && form.includeVersionHistory === 'Yes'"
 				v-model="form.versionHistoryScope"
 				:label="t('smartmigration', 'Version History Scope')"
 				:helper-text="t('smartmigration', 'How much SharePoint version history to extract, written as major:minor:minor — major versions, minor versions on the latest major, and minor versions on all other majors. * means all, and trailing parts may be left out; they default to 1 minor on the latest major and 0 on the others. The default *:*:* extracts everything.')" />

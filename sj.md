@@ -2,10 +2,8 @@
 
 
 
-Make "Include Version History" and "Version history scope" visibility depend on "Source type". Should always be hidden if "source type" = 'FileShare'
 
-Make a "settings" table that defines how the app is configured and some satus info.
-Columns: LicenseKey Text(40),
+
 
 
 
