@@ -306,7 +306,7 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 				class="jobs-tab__filter"
 				:label="t('smartmigration', 'Filter jobs')"
 				:placeholder="t('smartmigration', 'Filter jobs')"
-				@update:model-value="filter = $event" />
+				@update:model-value="filter = String($event)" />
 
 			<NcButton v-if="selectedIds.size > 0" variant="error" @click="requestDeleteSelected">
 				{{ n('smartmigration', 'Delete %n selected job', 'Delete %n selected jobs', selectedIds.size) }}
@@ -374,7 +374,7 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 							label-outside
 							:model-value="job.title"
 							:placeholder="t('smartmigration', 'Title')"
-							@update:model-value="updateTitle(job, $event)" />
+							@update:model-value="updateTitle(job, String($event))" />
 					</td>
 					<td>{{ job.mode }}</td>
 					<td>
@@ -403,7 +403,7 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 							label-outside
 							:model-value="job.group ?? ''"
 							:placeholder="t('smartmigration', 'Group')"
-							@update:model-value="updateGroup(job, $event)" />
+							@update:model-value="updateGroup(job, String($event))" />
 					</td>
 					<td class="jobs-tab__menu-col">
 						<NcActions :aria-label="t('smartmigration', 'Job row actions')">

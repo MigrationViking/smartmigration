@@ -200,6 +200,124 @@ the same task they do in a Teams list today.
 Empty states matter. A fresh install has no jobs and no runs; that screen should
 say how to create the first job, not "no data". And the screen should list partneres to contact in order to get the required SMART Migration installer and trial license key.
 
+## Tab and dialog pattern — Jobs is the reference
+
+The Jobs tab is the built, agreed shape for every other tab (Run History, Settings,
+Partners). Copy these patterns rather than inventing new ones.
+
+| File | Role |
+|---|---|
+| `src/components/JobsTab.vue` | Toolbar, table, inline editing, row menu, delete confirm |
+| `src/components/JobEditDialog.vue` | The create/edit dialog for one row |
+| `src/api/jobs.ts` | Typed axios client plus the `Job` / `JobInput` types |
+
+### The `NcTextField` null trap — read this first
+
+`NcInputField` renders `value: modelValue.value.toString()`. **A `null` model value
+throws, Vue swallows the render error, and the field silently renders nothing.** No
+console-visible layout gap, no error in the UI — the control just isn't there. This
+cost a full debugging session; do not rediscover it.
+
+- Never bind `NcTextField` to a nullable value. `NcTextArea` survives null at runtime
+  (it renders `modelValue` raw), which is why textareas stayed visible where text fields
+  vanished — but it still **types** `modelValue` as `string`, so a nullable binding is a
+  type error and relies on undeclared behaviour. Don't lean on it; hold strings for both.
+- In dialogs, hold every text-field-bound value as a **string** in the form state and
+  convert on save (see below).
+- For read-only or inline bindings, guard at the call site: `:model-value="job.group ?? ''"`.
+- **If a control is mysteriously missing from a form, suspect a null binding before
+  suspecting the `v-if`.**
+
+### Dialog form state
+
+`JobEditDialog` keeps a `FormState` type — `JobInput` with every nullable field bound to
+a text control (`description`, `group`, `sourceUrl`, `sourceUnc`, `sourceUpn`, `sizeFrom`,
+`sizeTo`, `sourceFileType`) widened to `string`. Loading an existing row coerces with
+`?? ''`; every widened field must be converted back in `save()` via
+`trimmedOrNull()` / `numberOrNull()` so the API still receives the `string | null` and
+`number | null` its contract declares. Numeric fields are plain strings with
+`type="number"` — **do not use `v-model.number`**, it renders a literal `NaN` when the
+user clears the field.
+
+### Conditional visibility
+
+Two independent mechanisms, both plain `v-if`:
+
+1. **Advanced Mode** — a `showAdvanced` computed (`form.advancedMode === 'Yes'`) gates
+   Scheduled Date, Recurrence, From/To Date, Size From/To, and Source File Type.
+2. **Field-driven** — Source URL / UNC / UPN each appear for exactly one Source Type
+   (SharePoint Library / FileShare / OneDrive); Version History Scope appears only when
+   Include Version History is checked.
+
+**Hiding is cosmetic only.** Hidden values stay in the form state and round-trip
+through `save()` untouched; the settings remain in force for the job. Never clear a
+value just because its field is hidden.
+
+### Dialog layout
+
+`NcDialog size="large"` wrapping a scrollable `.job-edit-form` (`max-height: 70vh`).
+Inside it: the Advanced Mode toggle first, then `<h3>` section headings — Job, Action,
+Source. Each field is a `.job-edit-form__field` (bold `<label>`, control, then a
+`.job-edit-form__hint` `<p>`); pairs of fields share a `.job-edit-form__grid`.
+
+### Color scheme — use the right half of each variable pair
+
+Server CSS variables only, as the Frontend design section requires. The trap is that
+Nextcloud ships several variants per semantic color and **most of them are fills, not
+text colors**:
+
+| Variable | Light | Dark | Use for |
+|---|---|---|---|
+| `--color-success` | `#D8F3DA` | `#11321A` | Backgrounds only — invisible as text in both themes |
+| `--color-success-text` | `#005416` | `#D5F2DC` | Text on a success *fill*; near-white on a dark page |
+| `--color-element-success` | `#099f05` | `#40A330` | **Saturated accent — section headings** |
+
+Section `<h3>`s use `var(--color-element-success)`, which stays clearly green and AA-
+contrast in both themes. Section separators are `border-top: 1px solid var(--color-border)`
+on each `<h3>`, so adding a section adds its rule automatically. Hint text is
+`var(--color-text-maxcontrast)` — don't reuse that for headings, they would match.
+Before picking any color variable, check its actual value in
+`/snap/nextcloud/current/htdocs/apps/theming/lib/Themes/{DefaultTheme,DarkTheme}.php`
+rather than guessing from the name.
+
+### Table row interactions
+
+- **Inline editing** for a few high-traffic columns (title, status, scheduled date,
+  group) via `patchJob`; everything else is edited in the dialog. Rows are never
+  editable in place the way Nextcloud Tables allows.
+- **Optimistic updates with rollback**: mutate the row, remember the previous value in
+  a `Map`, `await` the PATCH, and restore from the map plus `showError()` on failure.
+- **Multi-row replication**: `bulkTargets(job)` returns the whole selection when the
+  edited row is part of a multi-row selection, otherwise just that row. Inline edits to
+  status, group, and scheduled date replicate across the selection.
+- **Row menu order**: row-scoped actions first (Edit, Copy, Delete), then an
+  `NcActionSeparator`, then New last — New is the one action that doesn't act on the
+  clicked row, so it stays visually separated.
+- **Double-click a row opens the edit dialog**, but `onRowDoubleClick` ignores clicks
+  landing on `input, textarea, select, button, a, label, .jobs-tab__inline-field` —
+  otherwise double-clicking a word in an inline field to select it would yank the user
+  into a dialog.
+
+### Checks before calling frontend work done
+
+`npm run lint`, `npm run stylelint`, `npm run typecheck`, and `npm run build` must all
+pass, then hard-reload (Ctrl+F5). The UI is a single-page Vue app: clicking around will
+not pick up a rebuild, only a full reload will.
+
+**`npm run typecheck` (`vue-tsc --noEmit`) is the one that catches binding bugs.** Vite
+transpiles without checking and eslint does no type analysis, so a wrong prop type — the
+nullable-binding bug above — builds perfectly green. Run the typecheck after touching any
+`.vue` file; a clean `npm run build` is not evidence the types are sound.
+
+Two prop-type gotchas it enforces, both from `@nextcloud/vue`:
+
+- `NcTextField` and `NcTextArea` type `modelValue` as non-nullable, so bind strings.
+- `NcTextField` **emits** `string | number` (it supports `type="number"`), so a handler
+  taking a `string` needs `String($event)` at the call site.
+
+Run `vue-tsc` through the script, never `npx vue-tsc` — npx resolves its own TypeScript
+copy and dies with `ERR_PACKAGE_PATH_NOT_EXPORTED`.
+
 ## Distribution
 
 - Free and open source, AGPL-3.0-or-later, published on the Nextcloud App Store.
@@ -215,6 +333,7 @@ say how to create the first job, not "no data". And the screen should list partn
 
 - psalm and php-cs-fixer clean
 - `npm run build` succeeds
+- `npm run typecheck` clean (Vite does not typecheck — see the Jobs tab pattern section)
 - unit tests cover new mapper and controller logic
 - no new outbound network calls
 - no raw SQL concatenation

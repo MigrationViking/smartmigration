@@ -22,23 +22,26 @@ const emit = defineEmits<{
 }>()
 
 /**
- * NcTextField renders `modelValue.toString()`, which throws on null and makes the
- * field silently disappear. Every field bound to one therefore holds a string here
- * and is converted back to null (or a number) in `save()`.
+ * NcTextField renders `modelValue.toString()`, which throws on null and makes the field
+ * silently disappear; NcTextArea tolerates null at runtime but still types `modelValue`
+ * as a plain string. So every field bound to either holds a string here and is converted
+ * back to null (or a number) in `save()`.
  */
-type FormState = Omit<JobInput, 'group' | 'sourceUrl' | 'sourceUnc' | 'sourceUpn' | 'sizeFrom' | 'sizeTo'> & {
+type FormState = Omit<JobInput, 'description' | 'group' | 'sourceUrl' | 'sourceUnc' | 'sourceUpn' | 'sizeFrom' | 'sizeTo' | 'sourceFileType'> & {
+	description: string
 	group: string
 	sourceUrl: string
 	sourceUnc: string
 	sourceUpn: string
 	sizeFrom: string
 	sizeTo: string
+	sourceFileType: string
 }
 
 function defaultForm(): FormState {
 	return {
 		title: '',
-		description: null,
+		description: '',
 		group: 'Group 1',
 		advancedMode: 'No',
 		status: 'Hold',
@@ -55,7 +58,7 @@ function defaultForm(): FormState {
 		toDate: null,
 		sizeFrom: '',
 		sizeTo: '',
-		sourceFileType: null,
+		sourceFileType: '',
 		versionHistoryScope: '*:*:*',
 	}
 }
@@ -69,7 +72,7 @@ watch(() => [props.open, props.job], () => {
 	if (props.job) {
 		Object.assign(form, {
 			title: props.job.title,
-			description: props.job.description,
+			description: props.job.description ?? '',
 			group: props.job.group ?? '',
 			advancedMode: props.job.advancedMode,
 			status: props.job.status,
@@ -86,7 +89,7 @@ watch(() => [props.open, props.job], () => {
 			toDate: props.job.toDate,
 			sizeFrom: props.job.sizeFrom?.toString() ?? '',
 			sizeTo: props.job.sizeTo?.toString() ?? '',
-			sourceFileType: props.job.sourceFileType,
+			sourceFileType: props.job.sourceFileType ?? '',
 			versionHistoryScope: props.job.versionHistoryScope,
 		})
 	} else {
@@ -125,6 +128,8 @@ function numberOrNull(value: string): number | null {
 function save() {
 	emit('save', {
 		...form,
+		description: trimmedOrNull(form.description),
+		sourceFileType: trimmedOrNull(form.sourceFileType),
 		group: trimmedOrNull(form.group),
 		sourceUrl: trimmedOrNull(form.sourceUrl),
 		sourceUnc: trimmedOrNull(form.sourceUnc),
@@ -273,6 +278,11 @@ function save() {
 				</NcCheckboxRadioSwitch>
 			</div>
 
+			<NcTextField v-if="form.includeVersionHistory === 'Yes'"
+				v-model="form.versionHistoryScope"
+				:label="t('smartmigration', 'Version History Scope')"
+				:helper-text="t('smartmigration', 'How much SharePoint version history to extract, written as major:minor:minor — major versions, minor versions on the latest major, and minor versions on all other majors. * means all, and trailing parts may be left out; they default to 1 minor on the latest major and 0 on the others. The default *:*:* extracts everything.')" />
+
 			<div v-if="showAdvanced" class="job-edit-form__grid">
 				<div class="job-edit-form__field">
 					<label>{{ t('smartmigration', 'From Date') }}</label>
@@ -314,11 +324,6 @@ function save() {
 					{{ t('smartmigration', 'Enter one or more file extensions to filter by type. Extensions can be specified without the leading dot — for example, csv, txt, docx. Separate multiple extensions with a semicolon (;) on a single line, such as csv;txt;xlsx, or enter each extension on its own line. You can mix both styles freely. Filtering is always case-insensitive, so PDF and pdf are treated the same.') }}
 				</p>
 			</div>
-
-			<NcTextField v-if="showAdvanced"
-				v-model="form.versionHistoryScope"
-				:label="t('smartmigration', 'Version History Scope')"
-				:helper-text="t('smartmigration', 'How much SharePoint version history to extract, written as major:minor:minor — major versions, minor versions on the latest major, and minor versions on all other majors. * means all, and trailing parts may be left out; they default to 1 minor on the latest major and 0 on the others. The default *:*:* extracts everything.')" />
 		</div>
 
 		<template #actions>
