@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { t } from '@nextcloud/l10n'
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import JobsTab from './components/JobsTab.vue'
+import SettingsTab from './components/SettingsTab.vue'
+import SupportTab from './components/SupportTab.vue'
+import { type License, fetchLicense } from './api/settings'
+import { versionStatus } from './versionStatus'
 
 type TabId = 'home' | 'jobs' | 'runs' | 'settings' | 'partners' | 'support'
 
@@ -18,6 +24,54 @@ const tabs: { id: TabId, label: string }[] = [
 ]
 
 const activeTab = ref<TabId>('home')
+
+const license = ref<License | null>(null)
+
+/** Material Design "close" glyph, so the banner needs no icon dependency. */
+const mdiClose = 'M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z'
+
+/** Dismissal lasts for this page view only: a reload re-checks and warns again. */
+const versionAlertDismissed = ref(false)
+
+const requiredSmartVersion = computed(() => license.value?.requiredSmartVersion ?? '')
+
+/**
+ * An unreported version is the normal state of a fresh install, not a fault, so
+ * it gets an informational banner rather than the error one.
+ */
+const status = computed(() => versionStatus(license.value))
+
+const versionMismatch = computed(() => status.value === 'mismatch')
+
+const showVersionAlert = computed(() =>
+	(status.value === 'unreported' || status.value === 'mismatch')
+	&& !versionAlertDismissed.value,
+)
+
+/**
+ * Following the link lands on the fuller explanation, so the banner has done its
+ * job and would only repeat itself. Where that explanation lives depends on the
+ * problem: no server yet means you need an installer and a licence, which is a
+ * partner conversation; a version mismatch is a support conversation.
+ */
+function openHelpTab() {
+	activeTab.value = status.value === 'mismatch' ? 'support' : 'partners'
+	versionAlertDismissed.value = true
+}
+
+const versionAlertMessage = computed(() => (versionMismatch.value
+	? t('smartmigration', 'SMART Migration is not functional. The remote SMART Migration server is running a different version than this app requires, and jobs will not run until the two versions match. The SMART Migration server must be running version {version}.', { version: requiredSmartVersion.value })
+	: t('smartmigration', 'This app needs a remote SMART Migration server to do the actual work, and none has reported in yet — which is normal on a fresh install. Install SMART Migration version {version} and point it at this Nextcloud to get started.', { version: requiredSmartVersion.value })))
+
+onMounted(async () => {
+	try {
+		license.value = await fetchLicense()
+	} catch (error) {
+		// The Settings tab surfaces a toast for this; a second one on every page
+		// load would just be noise.
+		console.error('Failed to load version information', error)
+	}
+})
 
 interface Partner {
 	name: string
@@ -48,6 +102,30 @@ function mailtoLink(email: string): string {
 
 <template>
 	<div id="smartmigration-admin">
+		<NcNoteCard v-if="showVersionAlert"
+			:type="versionMismatch ? 'error' : 'info'"
+			class="smartmigration-version-alert"
+			:show-alert="versionMismatch">
+			<div class="smartmigration-version-alert__row">
+				<span>
+					{{ versionAlertMessage }}
+					<button class="smartmigration-version-alert__link"
+						@click="openHelpTab">
+						{{ t('smartmigration', 'Learn more') }}
+					</button>
+				</span>
+				<NcButton variant="tertiary"
+					class="smartmigration-version-alert__close"
+					:aria-label="t('smartmigration', 'Dismiss until the page is reloaded')"
+					:title="t('smartmigration', 'Dismiss until the page is reloaded')"
+					@click="versionAlertDismissed = true">
+					<template #icon>
+						<NcIconSvgWrapper :path="mdiClose" />
+					</template>
+				</NcButton>
+			</div>
+		</NcNoteCard>
+
 		<h2>{{ t('smartmigration', 'SMART Migration') }}</h2>
 
 		<div class="smartmigration-tabs" role="tablist">
@@ -73,11 +151,15 @@ function mailtoLink(email: string): string {
 				:name="t('smartmigration', 'Run History')"
 				:description="t('smartmigration', 'The history of job runs will live here.')" />
 
-			<NcEmptyContent v-else-if="activeTab === 'settings'"
-				:name="t('smartmigration', 'Settings')"
-				:description="t('smartmigration', 'License information and general settings will live here.')" />
+			<SettingsTab v-else-if="activeTab === 'settings'"
+				@show-partners="activeTab = 'partners'"
+				@show-support="activeTab = 'support'" />
 
 			<div v-else-if="activeTab === 'partners'" class="smartmigration-partners-tab">
+				<NcNoteCard v-if="status === 'unreported'" type="info">
+					{{ t('smartmigration', 'No SMART Migration server has reported in yet, which is normal on a fresh install of this app. Install the SMART Migration server on the machine that will run the BI data discoveries and migrations and connect it to this Nextcloud; it writes its version here on first contact, and this app starts working once it does. The server must be running version {version}. If you do not have the installer or licence key, contact one of the partners listed.', { version: requiredSmartVersion }) }}
+				</NcNoteCard>
+
 				<table class="smartmigration-partners">
 					<thead>
 						<tr>
@@ -107,13 +189,7 @@ function mailtoLink(email: string): string {
 				</table>
 			</div>
 
-			<div v-else class="smartmigration-support">
-				<NcButton href="https://migratedms.com/pages/nextcloud"
-					target="_blank"
-					:title="t('smartmigration', 'Opens the MigrateDMS AI Support page in a new tab')">
-					{{ t('smartmigration', 'AI Support') }}
-				</NcButton>
-			</div>
+			<SupportTab v-else />
 		</div>
 	</div>
 </template>
@@ -122,6 +198,33 @@ function mailtoLink(email: string): string {
 #smartmigration-admin {
 	padding: 20px;
 	max-width: 960px;
+}
+
+.smartmigration-version-alert {
+	margin-block-end: 16px;
+}
+
+.smartmigration-version-alert__close {
+	flex-shrink: 0;
+}
+
+/* Keeps the dismiss button centred against the text however many lines it wraps to. */
+.smartmigration-version-alert__row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+/* A real button, so it is keyboard reachable, painted to read as an inline link. */
+.smartmigration-version-alert__link {
+	background: none;
+	border: none;
+	padding: 0;
+	font: inherit;
+	font-weight: bold;
+	color: inherit;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .smartmigration-tabs {

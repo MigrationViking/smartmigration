@@ -338,4 +338,4 @@ copy and dies with `ERR_PACKAGE_PATH_NOT_EXPORTED`.
 - no new outbound network calls
 - no raw SQL concatenation
 - no hardcoded URL paths
-- new API endpoints documented in `docs/api.md`
+- new API endpoints documented in `docs/appapi.md`

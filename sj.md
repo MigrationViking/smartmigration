@@ -1,10 +1,58 @@
 
 
+test expiration date expired
+test forkert versionsnummer
+test clear
 
 
 
 
 
+
+Add an API endpoint to set the support and license information in the settingstable.
+SupportName,SupportEmail,SupportCompay,LicenseKey,ExpirationDate
+
+
+
+add a column to settings table RemoteSMVersion Text(10)
+On the settings tab page add a section "SMART Migration Server" and under that section show tha value of RemoteSMVersion as "Version:"
+On the Settings tab page add
+
+
+
+
+Add to the app settings "RequiredSMVersion"   (SM is short for SMART Migration). set it to "7.96" now.
+
+rød besked. hvis mismatch på home.
+
+
+firma,email og navn under support.
+
+i sm: rename sm mappen til Teams app og NC app
+
+manular iframe.
+
+ai frame
+
+
+ved skift til onedrive do not include version history
+
+vis type i oversigten
+
+skift group hjælpetekst
+
+hjælpetekst til titel
+
+
+
+API:
+in the api make a method to retrieve the "RequiredSMVersion","AppVersion"
+
+
+digital resilence tab.
+
+
+filter on ready,Finished,Running, error,OK,warning
 
 
 en messagebox i toppen når den er ny eller mangelr licenskode. vis infor om process i en tab der er link til.
@@ -59,4 +107,11 @@ Job Mode:
 
 The job btable and and id column and an RunHistoryID column that links lob to runhistory 1:n
 
+**********  PB Client *********
 
+CBX_TeamsEnabled, CBX_NextcloudEnabled (system_cfg table)
+- Styrer hvilke interfaces der køres
+
+
+*********  Release *********
+Set SM version: lib/AppInfo/Application.php:22

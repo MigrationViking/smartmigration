@@ -164,7 +164,8 @@ function save() {
 			<div class="job-edit-form__grid">
 				<NcTextField v-model="form.title"
 					:label="t('smartmigration', 'Title')"
-					:placeholder="t('smartmigration', 'Enter value here')" />
+					:placeholder="t('smartmigration', 'Enter value here')"
+					:helper-text="t('smartmigration', 'A short, distinctive name for this job. It identifies the job in the jobs list and in every run-history row it produces.')" />
 
 				<div class="job-edit-form__field">
 					<label>{{ t('smartmigration', 'Job Description') }}</label>
@@ -230,6 +231,9 @@ function save() {
 					@update:model-value="form.mode = $event">
 					{{ value }}
 				</NcCheckboxRadioSwitch>
+				<p class="job-edit-form__hint">
+					{{ t('smartmigration', 'What the job does when it runs: Discovery scans the source and reports which files are there without moving anything; Test Migration is a trial run used to validate the job before committing to it; Migration copies the files to a Nextcloud team folder or to the user\'s personal files. A job can be switched from Discovery to Migration later, and a Discovery-only job is a complete result in its own right, not an unfinished migration.') }}
+				</p>
 			</div>
 
 			<h3>{{ t('smartmigration', 'Source') }}</h3>

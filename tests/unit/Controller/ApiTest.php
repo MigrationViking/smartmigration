@@ -6,8 +6,10 @@ namespace Controller;
 
 use OCA\SmartMigration\AppInfo\Application;
 use OCA\SmartMigration\Controller\ApiController;
+use OCA\SmartMigration\Db\SettingMapper;
 use OCP\App\IAppManager;
 use OCP\IRequest;
+use OCP\IUserSession;
 use OCP\ServerVersion;
 use PHPUnit\Framework\TestCase;
 
@@ -26,11 +28,9 @@ final class ApiTest extends TestCase {
 			$request,
 			$this->appManager,
 			$this->serverVersion,
+			$this->createMock(SettingMapper::class),
+			$this->createMock(IUserSession::class),
 		);
-	}
-
-	public function testIndex(): void {
-		$this->assertEquals('Hello everyone2!', $this->controller->index()->getData()['message']);
 	}
 
 	public function testVersion(): void {
@@ -45,6 +45,8 @@ final class ApiTest extends TestCase {
 		$this->assertEquals(Application::APP_ID, $data['appId']);
 		$this->assertEquals('0.1.0', $data['appVersion']);
 		$this->assertEquals('v1', $data['apiVersion']);
+		$this->assertEquals(Application::REQUIRED_SMART_VERSION, $data['requiredSmartVersion']);
+		$this->assertLessThanOrEqual(10, mb_strlen(Application::REQUIRED_SMART_VERSION));
 		$this->assertEquals('34.0.3.1', $data['nextcloudVersion']);
 		$this->assertEquals(34, $data['nextcloudVersionMajor']);
 	}

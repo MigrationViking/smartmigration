@@ -15,7 +15,7 @@ Discovery, migration and run history all stay visible in Nextcloud, with reports
 
 Requires SMART Migration. See https://www.migratedms.com
 	]]></description>
-	<version>0.1.1</version>
+	<version>0.1.5</version>
 	<licence>AGPL-3.0-or-later</licence>
 	<author mail="sj@migratedms.com" homepage="https://migratedms.com">Steen Jakobsen</author>
 	<namespace>SmartMigration</namespace>
