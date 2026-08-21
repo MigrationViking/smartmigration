@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { t } from '@nextcloud/l10n'
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -27,6 +27,16 @@ const activeTab = ref<TabId>('home')
 const license = ref<License | null>(null)
 
 const selectedPartner = ref<Partner | null>(null)
+type PartnerSortKey = 'name' | 'country' | 'services' | 'website'
+const sortKey = ref<PartnerSortKey>('name')
+const sortAscending = ref(true)
+
+const sortedPartners = computed(() => [...partners].sort((left, right) => {
+	const leftValue = sortKey.value === 'services' ? left.services.join(', ') : left[sortKey.value]
+	const rightValue = sortKey.value === 'services' ? right.services.join(', ') : right[sortKey.value]
+	const comparison = leftValue.localeCompare(rightValue)
+	return sortAscending.value ? comparison : -comparison
+}))
 
 onMounted(async () => {
 	try {
@@ -40,6 +50,16 @@ onMounted(async () => {
 
 function selectPartner(partner: Partner) {
 	selectedPartner.value = partner
+}
+
+function sortPartners(key: PartnerSortKey) {
+	if (sortKey.value === key) {
+		sortAscending.value = !sortAscending.value
+		return
+	}
+
+	sortKey.value = key
+	sortAscending.value = true
 }
 </script>
 
@@ -119,17 +139,39 @@ function selectPartner(partner: Partner) {
 					<table class="smartmigration-partners">
 						<thead>
 							<tr>
-								<th class="smartmigration-partners__logo-col">
-									{{ t('smartmigration', 'Logo') }}
+								<th class="smartmigration-partners__logo-col" aria-sort="none">
+									<button type="button" class="smartmigration-partners__sort-button" @click="sortPartners('name')">
+										{{ t('smartmigration', 'Logo') }}
+									</button>
 								</th>
-								<th>{{ t('smartmigration', 'Company') }}</th>
-								<th>{{ t('smartmigration', 'Country') }}</th>
-								<th>{{ t('smartmigration', 'Services') }}</th>
-								<th>{{ t('smartmigration', 'Website') }}</th>
+								<th :aria-sort="sortKey === 'name' ? (sortAscending ? 'ascending' : 'descending') : 'none'">
+									<button type="button" class="smartmigration-partners__sort-button" @click="sortPartners('name')">
+										{{ t('smartmigration', 'Company') }}
+										<span v-if="sortKey === 'name'" aria-hidden="true">{{ sortAscending ? ' ^' : ' v' }}</span>
+									</button>
+								</th>
+								<th :aria-sort="sortKey === 'country' ? (sortAscending ? 'ascending' : 'descending') : 'none'">
+									<button type="button" class="smartmigration-partners__sort-button" @click="sortPartners('country')">
+										{{ t('smartmigration', 'Country') }}
+										<span v-if="sortKey === 'country'" aria-hidden="true">{{ sortAscending ? ' ^' : ' v' }}</span>
+									</button>
+								</th>
+								<th :aria-sort="sortKey === 'services' ? (sortAscending ? 'ascending' : 'descending') : 'none'">
+									<button type="button" class="smartmigration-partners__sort-button" @click="sortPartners('services')">
+										{{ t('smartmigration', 'Services') }}
+										<span v-if="sortKey === 'services'" aria-hidden="true">{{ sortAscending ? ' ^' : ' v' }}</span>
+									</button>
+								</th>
+								<th :aria-sort="sortKey === 'website' ? (sortAscending ? 'ascending' : 'descending') : 'none'">
+									<button type="button" class="smartmigration-partners__sort-button" @click="sortPartners('website')">
+										{{ t('smartmigration', 'Website') }}
+										<span v-if="sortKey === 'website'" aria-hidden="true">{{ sortAscending ? ' ^' : ' v' }}</span>
+									</button>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="partner in partners"
+							<tr v-for="partner in sortedPartners"
 								:key="partner.id"
 								:aria-selected="selectedPartner?.id === partner.id"
 								:class="{ 'smartmigration-partners__row--selected': selectedPartner?.id === partner.id }"
@@ -232,7 +274,7 @@ function selectPartner(partner: Partner) {
 .smartmigration-partner-detail__description {
 	grid-column: 1 / -1;
 	min-height: 192px;
-	margin: 24px 0 0;
+	margin: 8px;
 	padding: 16px;
 	background: var(--color-background-hover);
 	border-left: 3px solid var(--color-primary-element);
@@ -268,6 +310,20 @@ function selectPartner(partner: Partner) {
 .smartmigration-partners th {
 	color: var(--color-text-maxcontrast);
 	font-weight: bold;
+}
+
+.smartmigration-partners__sort-button {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+
+.smartmigration-partners__sort-button:focus-visible {
+	outline: 2px solid var(--color-primary-element);
+	outline-offset: 2px;
 }
 
 .smartmigration-partners td a {

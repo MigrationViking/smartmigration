@@ -8,7 +8,7 @@ import { imagePath } from '@nextcloud/router'
 import { type Job, fetchJobs } from '../api/jobs'
 import { type License } from '../api/settings'
 
-const appLogo = imagePath('smartmigration', 'app.svg')
+const appLogo = imagePath('smartmigration', 'smart.png')
 
 const props = defineProps<{
 	license: License | null
@@ -126,19 +126,16 @@ onMounted(async () => {
 }
 
 .smartmigration-home__welcome-graphic {
-	display: grid;
-	place-items: center;
-	min-height: 220px;
-	background: var(--color-primary-element-light);
-	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .smartmigration-home__welcome-graphic img {
-	width: 128px;
-	height: 128px;
-	padding: 28px;
-	background: var(--color-primary-element);
-	border-radius: 50%;
+	display: block;
+	width: 100%;
+	max-width: 360px;
+	height: auto;
 }
 
 .smartmigration-home__eyebrow {
@@ -213,7 +210,7 @@ onMounted(async () => {
 	}
 
 	.smartmigration-home__welcome-graphic {
-		min-height: 160px;
+		width: 100%;
 	}
 
 	.smartmigration-home__summary {
