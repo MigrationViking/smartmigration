@@ -316,12 +316,12 @@ function save() {
 				<NcTextField v-model="form.sizeFrom"
 					type="number"
 					:label="t('smartmigration', 'Size From')"
-					:helper-text="t('smartmigration', 'Include files of [Size] &gt;= NN (MB)')" />
+					:helper-text="t('smartmigration', 'Include files of [Size] >= NN (MB)', undefined, { sanitize: false })" />
 
 				<NcTextField v-model="form.sizeTo"
 					type="number"
 					:label="t('smartmigration', 'Size To')"
-					:helper-text="t('smartmigration', 'Include files of size &lt;= xx MB')" />
+					:helper-text="t('smartmigration', 'Include files of size <= xx MB', undefined, { sanitize: false })" />
 			</div>
 
 			<div v-if="showAdvanced" class="job-edit-form__field">
@@ -386,5 +386,14 @@ function save() {
 	color: var(--color-text-maxcontrast);
 	font-size: 0.85em;
 	margin: 0;
+}
+
+/*
+ * NcInputField ships its own helper text with no font-size, so a `helper-text`
+ * prop rendered a size larger than the `.job-edit-form__hint` paragraphs next to
+ * it. Match them so every hint in the dialog reads the same.
+ */
+.job-edit-form :deep(.input-field__helper-text-message) {
+	font-size: 0.85em;
 }
 </style>

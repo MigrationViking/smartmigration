@@ -107,7 +107,7 @@ onMounted(load)
 			</NcNoteCard>
 
 			<NcNoteCard v-if="versionUnreported" type="info">
-				{{ t('smartmigration', 'This app needs a remote SMART Migration server to do the actual work, and none has reported in yet — which is normal on a fresh install. Install SMART Migration version {version} and point it at this Nextcloud to get started.', { version: requiredSmartVersion }) }}
+				{{ t('smartmigration', 'This app needs a remote SMART Migration server to do the actual work. Install SMART Migration version {version} and point it at this Nextcloud to get started.', { version: requiredSmartVersion }) }}
 				<button class="settings-tab__link" @click="emit('showPartners')">
 					{{ t('smartmigration', 'Learn more') }}
 				</button>

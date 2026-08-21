@@ -6,12 +6,20 @@ test clear
 
 
 
+syntax check for ur,upnunc etc.
+valiuderin af at alle felter er udfyldt korrekt.
 
+farvekode doprdværdier
 
+Create new job knap
+
+delete lave cancel efter delet (er det std.)
 
 Add an API endpoint to set the support and license information in the settingstable.
 SupportName,SupportEmail,SupportCompay,LicenseKey,ExpirationDate
 
+format description.
+feler links i description.
 
 
 add a column to settings table RemoteSMVersion Text(10)

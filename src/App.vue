@@ -61,7 +61,7 @@ function openHelpTab() {
 
 const versionAlertMessage = computed(() => (versionMismatch.value
 	? t('smartmigration', 'SMART Migration is not functional. The remote SMART Migration server is running a different version than this app requires, and jobs will not run until the two versions match. The SMART Migration server must be running version {version}.', { version: requiredSmartVersion.value })
-	: t('smartmigration', 'This app needs a remote SMART Migration server to do the actual work, and none has reported in yet — which is normal on a fresh install. Install SMART Migration version {version} and point it at this Nextcloud to get started.', { version: requiredSmartVersion.value })))
+	: t('smartmigration', 'This app needs a remote SMART Migration server to do the actual work. Install SMART Migration version {version} and point it at this Nextcloud to get started.', { version: requiredSmartVersion.value })))
 
 onMounted(async () => {
 	try {
@@ -157,7 +157,7 @@ function mailtoLink(email: string): string {
 
 			<div v-else-if="activeTab === 'partners'" class="smartmigration-partners-tab">
 				<NcNoteCard v-if="status === 'unreported'" type="info">
-					{{ t('smartmigration', 'No SMART Migration server has reported in yet, which is normal on a fresh install of this app. Install the SMART Migration server on the machine that will run the BI data discoveries and migrations and connect it to this Nextcloud; it writes its version here on first contact, and this app starts working once it does. The server must be running version {version}. If you do not have the installer or licence key, contact one of the partners listed.', { version: requiredSmartVersion }) }}
+					{{ t('smartmigration', 'No SMART Migration server has reported in, which is normal on a fresh install of this app. Install the SMART Migration server on the machine that will run the BI data discoveries and migrations and connect it to this Nextcloud; it writes its version here on first contact, and this app starts working once it does. The server must be running version {version}. If you do not have the installer or licence key, contact one of the partners listed.', { version: requiredSmartVersion }) }}
 				</NcNoteCard>
 
 				<table class="smartmigration-partners">
@@ -197,7 +197,9 @@ function mailtoLink(email: string): string {
 <style scoped>
 #smartmigration-admin {
 	padding: 20px;
-	max-width: 960px;
+	/* Wide enough for the jobs table's ~1000px minimum, so the tab bar, the panel
+	   and the table all share one width instead of the table overflowing. */
+	max-width: 1200px;
 }
 
 .smartmigration-version-alert {
@@ -231,7 +233,7 @@ function mailtoLink(email: string): string {
 	display: flex;
 	gap: 4px;
 	margin: 16px 0 8px;
-	border-bottom: 1px solid var(--color-border);
+	border-bottom: 2px solid var(--color-primary-element);
 	padding-bottom: 8px;
 }
 
