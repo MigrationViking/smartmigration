@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>atelier-cloud</id>
+  <sortOrder>5</sortOrder>
+  <name>Atelier Cloud Solutions</name>
+  <country>France</country>
+  <services><service>Files</service><service>E-Mail</service><service>Calendar</service></services>
+  <address>18 Rue de la Republique, 69002 Lyon</address>
+  <email>contact@ateliercloud.example</email>
+  <phone>+33 4 72 00 12 40</phone>
+  <website>https://www.ateliercloud.example</website>
+  <logoFile>05 atelier-cloud.svg</logoFile>
+  <descriptionFile>05 atelier-cloud.html</descriptionFile>
+  <description>Design-led migrations for creative and cultural institutions with large media libraries.</description>
+</partner>

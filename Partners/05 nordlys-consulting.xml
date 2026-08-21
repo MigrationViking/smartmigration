@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>nordlys-consulting</id>
+  <sortOrder>3</sortOrder>
+  <name>Nordlys Consulting ApS</name>
+  <country>Denmark</country>
+  <services><service>Files</service><service>E-Mail</service></services>
+  <address>Vesterbrogade 12, 1620 Copenhagen</address>
+  <email>partners@nordlysconsulting.example</email>
+  <phone>+45 70 20 30 40</phone>
+  <website>https://www.nordlysconsulting.example</website>
+  <logoFile>03 nordlys-consulting.svg</logoFile>
+  <descriptionFile>03 nordlys-consulting.html</descriptionFile>
+  <description>Structured Nordic content migration with discovery workshops, inventories and a roadmap per business unit.</description>
+</partner>

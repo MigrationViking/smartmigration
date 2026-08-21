@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>brightpath-migrations</id>
+  <sortOrder>6</sortOrder>
+  <name>BrightPath Migrations Ltd</name>
+  <country>United Kingdom</country>
+  <services><service>Files</service><service>E-Mail</service></services>
+  <address>22 Deansgate, Manchester M3 2BW</address>
+  <email>hello@brightpathmigrations.example</email>
+  <phone>+44 161 555 0122</phone>
+  <website>https://www.brightpathmigrations.example</website>
+  <logoFile>06 brightpath-migrations.svg</logoFile>
+  <descriptionFile>06 brightpath-migrations.html</descriptionFile>
+  <description>Transparent, wave-based migration delivery with dashboards, test evidence and a clean cutover.</description>
+</partner>

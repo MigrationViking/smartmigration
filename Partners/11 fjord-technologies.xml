@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>fjord-technologies</id>
+  <sortOrder>9</sortOrder>
+  <name>Fjord Technologies AS</name>
+  <country>Norway</country>
+  <services><service>Files</service></services>
+  <address>Karl Johans gate 10, 0154 Oslo</address>
+  <email>team@fjordtech.example</email>
+  <phone>+47 22 555 018</phone>
+  <website>https://www.fjordtech.example</website>
+  <logoFile>09 fjord-technologies.svg</logoFile>
+  <descriptionFile>09 fjord-technologies.html</descriptionFile>
+  <description>One thing, done exactly: large Norwegian file estates moved without drama.</description>
+</partner>

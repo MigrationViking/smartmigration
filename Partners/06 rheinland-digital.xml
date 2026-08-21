@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>rheinland-digital</id>
+  <sortOrder>4</sortOrder>
+  <name>Rheinland Digital GmbH</name>
+  <country>Germany</country>
+  <services><service>Files</service><service>Calendar</service></services>
+  <address>Domstrasse 4, 50668 Cologne</address>
+  <email>kontakt@rheinlanddigital.example</email>
+  <phone>+49 221 555 0140</phone>
+  <website>https://www.rheinlanddigital.example</website>
+  <logoFile>04 rheinland-digital.svg</logoFile>
+  <descriptionFile>04 rheinland-digital.html</descriptionFile>
+  <description>Microsoft 365 and Nextcloud projects from first assessment through migration, adoption and managed support.</description>
+</partner>

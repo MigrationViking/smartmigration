@@ -80,7 +80,11 @@ function bulkTargets(job: Job): Job[] {
 		: [job]
 }
 
-/** Drives the per-status colour on the inline status control. */
+/**
+ * Drives the per-status colour on the inline status control.
+ *
+ * @param status - The job's status value, e.g. Hold or Ready
+ */
 function statusClass(status: string): string {
 	return `jobs-tab__status--${status.toLowerCase().replace(/\s+/g, '-')}`
 }

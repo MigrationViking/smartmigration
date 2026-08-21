@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>alpine-data</id>
+  <sortOrder>7</sortOrder>
+  <name>Alpine Data Partners AG</name>
+  <country>Switzerland</country>
+  <services><service>Files</service><service>Calendar</service></services>
+  <address>Bahnhofstrasse 8, 8001 Zurich</address>
+  <email>office@alpinedatapartners.example</email>
+  <phone>+41 44 555 0160</phone>
+  <website>https://www.alpinedatapartners.example</website>
+  <logoFile>07 alpine-data.svg</logoFile>
+  <descriptionFile>07 alpine-data.html</descriptionFile>
+  <description>Compliance-led migration for organisations that need auditability, least privilege and retention control.</description>
+</partner>

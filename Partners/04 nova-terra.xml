@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>nova-terra</id>
+  <sortOrder>2</sortOrder>
+  <name>Nova Terra Systems</name>
+  <country>Netherlands</country>
+  <services><service>E-Mail</service><service>Calendar</service></services>
+  <address>Prinsengracht 45, 1015 Amsterdam</address>
+  <email>info@novaterra.example</email>
+  <phone>+31 20 555 0190</phone>
+  <website>https://www.novaterra.example</website>
+  <logoFile>02 nova-terra.svg</logoFile>
+  <descriptionFile>02 nova-terra.html</descriptionFile>
+  <description>Editorial, unhurried migration work for organisations that would rather move once and move well.</description>
+</partner>

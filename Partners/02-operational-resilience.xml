@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>operational-resilience-partners</id>
+  <name>Operational Resilience Partners</name>
+  <country>Germany</country>
+  <services><service>Files</service><service>E-Mail</service><service>Calendar</service></services>
+  <address>Friedrichstrasse 120, 10117 Berlin</address>
+  <email>hello@operational-resilience.example</email>
+  <phone>+49 30 555 0210</phone>
+  <website>https://www.operational-resilience.example</website>
+  <logoFile>02-operational-resilience.svg</logoFile>
+  <descriptionFile>02-operational-resilience.html</descriptionFile>
+  <descriptionLayout>governance-grid</descriptionLayout>
+</partner>

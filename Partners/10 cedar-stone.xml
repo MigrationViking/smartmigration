@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>cedar-stone</id>
+  <sortOrder>8</sortOrder>
+  <name>Cedar &amp; Stone Consulting</name>
+  <country>Canada</country>
+  <services><service>Files</service><service>E-Mail</service><service>Calendar</service></services>
+  <address>150 King Street W, Toronto, ON M5H 1J9</address>
+  <email>support@cedarstone.example</email>
+  <phone>+1 416 555 0174</phone>
+  <website>https://www.cedarstone.example</website>
+  <logoFile>08 cedar-stone.svg</logoFile>
+  <descriptionFile>08 cedar-stone.html</descriptionFile>
+  <description>Bilingual migration delivery for Canadian public sector and regulated customers.</description>
+</partner>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>harborview-it</id>
+  <sortOrder>1</sortOrder>
+  <name>Harborview IT Services</name>
+  <country>United States</country>
+  <services><service>Files</service></services>
+  <address>200 Seaport Blvd, Boston, MA 02210</address>
+  <email>sales@harborviewit.example</email>
+  <phone>+1 617 555 0188</phone>
+  <website>https://www.harborviewit.example</website>
+  <logoFile>01 harborview-it.svg</logoFile>
+  <descriptionFile>01 harborview-it.html</descriptionFile>
+  <description>Distributed migration delivery for regional offices, mixed connectivity and business-critical shared folders.</description>
+</partner>

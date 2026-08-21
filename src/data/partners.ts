@@ -1,11 +1,22 @@
-import { imagePath } from '@nextcloud/router'
-
-const appLogo = imagePath('smartmigration', 'app.svg')
+import { buildPartner } from './partnerImport'
 
 export type PartnerService = 'Files' | 'E-Mail' | 'Calendar'
+export type PartnerDescriptionTone = 'primary' | 'success' | 'warning'
+export type PartnerDescriptionLayout = 'sections' | 'spotlight' | 'columns' | 'banner' | 'timeline' | 'governance-grid' | 'assurance-matrix'
+
+export interface PartnerDescriptionSection {
+	heading: string
+	text: string
+	tone: PartnerDescriptionTone
+}
 
 export interface Partner {
 	id: string
+	/**
+	 * Initial position in the partner list, taken from the numeric prefix of the
+	 * partner's files ("01 nova-terra.xml"). Lower sorts first.
+	 */
+	sortOrder: number
 	name: string
 	logo: string
 	country: string
@@ -15,127 +26,70 @@ export interface Partner {
 	phone: string
 	website: string
 	description: string
+	descriptionSections?: PartnerDescriptionSection[]
+	descriptionLayout?: PartnerDescriptionLayout
+	descriptionHtml?: string
 }
 
-export const partners: Partner[] = [
-	{
-		id: 'nordlys-consulting',
-		name: 'Nordlys Consulting ApS',
-		logo: appLogo,
-		country: 'Denmark',
-		services: ['Files', 'E-Mail'],
-		address: 'Vesterbrogade 12, 1620 Copenhagen',
-		email: 'partners@nordlysconsulting.example',
-		phone: '+45 70 20 30 40',
-		website: 'https://www.nordlysconsulting.example',
-		description: 'Nordlys Consulting helps organisations plan and deliver structured content migrations, with a focus on discovery, governance, and reliable handover.',
-	},
-	{
-		id: 'rheinland-digital',
-		name: 'Rheinland Digital GmbH',
-		logo: appLogo,
-		country: 'Germany',
-		services: ['Files', 'Calendar'],
-		address: 'Domstrasse 4, 50668 Cologne',
-		email: 'kontakt@rheinlanddigital.example',
-		phone: '+49 221 555 0140',
-		website: 'https://www.rheinlanddigital.example',
-		description: 'Rheinland Digital supports Microsoft 365 and Nextcloud projects from assessment through migration, adoption, and operational support.',
-	},
-	{
-		id: 'atelier-cloud',
-		name: 'Atelier Cloud Solutions',
-		logo: appLogo,
-		country: 'France',
-		services: ['Files', 'E-Mail', 'Calendar'],
-		address: '18 Rue de la Republique, 69002 Lyon',
-		email: 'contact@ateliercloud.example',
-		phone: '+33 4 72 00 12 40',
-		website: 'https://www.ateliercloud.example',
-		description: 'Atelier Cloud Solutions combines migration engineering with practical change management for teams moving to secure, collaborative workspaces.',
-	},
-	{
-		id: 'harborview-it',
-		name: 'Harborview IT Services',
-		logo: appLogo,
-		country: 'United States',
-		services: ['Files'],
-		address: '200 Seaport Blvd, Boston, MA 02210',
-		email: 'sales@harborviewit.example',
-		phone: '+1 617 555 0188',
-		website: 'https://www.harborviewit.example',
-		description: 'Harborview IT Services delivers hands-on migration programmes for distributed organisations, from inventory and planning to final validation.',
-	},
-	{
-		id: 'nova-terra',
-		name: 'Nova Terra Systems',
-		logo: appLogo,
-		country: 'Netherlands',
-		services: ['E-Mail', 'Calendar'],
-		address: 'Prinsengracht 45, 1015 Amsterdam',
-		email: 'info@novaterra.example',
-		phone: '+31 20 555 0190',
-		website: 'https://www.novaterra.example',
-		description: 'Nova Terra Systems specialises in planning communication and collaboration migrations with clear reporting and measurable outcomes.',
-	},
-	{
-		id: 'brightpath-migrations',
-		name: 'BrightPath Migrations Ltd',
-		logo: appLogo,
-		country: 'United Kingdom',
-		services: ['Files', 'E-Mail'],
-		address: '22 Deansgate, Manchester M3 2BW',
-		email: 'hello@brightpathmigrations.example',
-		phone: '+44 161 555 0122',
-		website: 'https://www.brightpathmigrations.example',
-		description: 'BrightPath Migrations helps customers move content confidently, pairing technical execution with transparent communication throughout the project.',
-	},
-	{
-		id: 'alpine-data',
-		name: 'Alpine Data Partners AG',
-		logo: appLogo,
-		country: 'Switzerland',
-		services: ['Files', 'Calendar'],
-		address: 'Bahnhofstrasse 8, 8001 Zurich',
-		email: 'office@alpinedatapartners.example',
-		phone: '+41 44 555 0160',
-		website: 'https://www.alpinedatapartners.example',
-		description: 'Alpine Data Partners provides careful, compliant migration services for organisations that need strong control over data and access.',
-	},
-	{
-		id: 'cedar-stone',
-		name: 'Cedar & Stone Consulting',
-		logo: appLogo,
-		country: 'Canada',
-		services: ['Files', 'E-Mail', 'Calendar'],
-		address: '150 King Street W, Toronto, ON M5H 1J9',
-		email: 'support@cedarstone.example',
-		phone: '+1 416 555 0174',
-		website: 'https://www.cedarstone.example',
-		description: 'Cedar & Stone Consulting works with business and public-sector teams on secure migrations, governance, and long-term support.',
-	},
-	{
-		id: 'fjord-technologies',
-		name: 'Fjord Technologies AS',
-		logo: appLogo,
-		country: 'Norway',
-		services: ['Files'],
-		address: 'Karl Johans gate 10, 0154 Oslo',
-		email: 'team@fjordtech.example',
-		phone: '+47 22 555 018',
-		website: 'https://www.fjordtech.example',
-		description: 'Fjord Technologies brings migration, automation, and data quality expertise to organisations modernising their collaboration platforms.',
-	},
-	{
-		id: 'sunrise-cloud',
-		name: 'Sunrise Cloud Advisors',
-		logo: appLogo,
-		country: 'Australia',
-		services: ['E-Mail', 'Calendar'],
-		address: '55 Market Street, Sydney NSW 2000',
-		email: 'contact@sunrisecloud.example',
-		phone: '+61 2 5550 0195',
-		website: 'https://www.sunrisecloud.example',
-		description: 'Sunrise Cloud Advisors supports modern workplace programmes with practical migration planning, delivery, and post-project care.',
-	},
-]
+/**
+ * Partners are supplied as files in the repository's `Partners` folder, three per
+ * partner sharing one numbered stem:
+ *
+ *     01 harborview-it.xml    partner data
+ *     01 harborview-it.svg    logo
+ *     01 harborview-it.html   formatted presentation
+ *
+ * The leading number sets the initial order of the partner table. Vite inlines the
+ * folder at build time, so adding a partner means dropping in three files and
+ * rebuilding — there is no upload step and no request at runtime.
+ */
+const xmlFiles = import.meta.glob('/Partners/*.xml', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
+const htmlFiles = import.meta.glob('/Partners/*.html', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
+const svgFiles = import.meta.glob('/Partners/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
+
+function baseName(path: string): string {
+	return path.split('/').pop()?.toLowerCase() ?? ''
+}
+
+function stemOf(path: string): string {
+	return baseName(path).replace(/\.[^.]+$/, '')
+}
+
+function byName(files: Record<string, string>): Map<string, string> {
+	return new Map(Object.entries(files).map(([path, content]) => [baseName(path), content]))
+}
+
+function byStem(files: Record<string, string>): Map<string, string> {
+	return new Map(Object.entries(files).map(([path, content]) => [stemOf(path), content]))
+}
+
+function loadPartners(): Partner[] {
+	const htmlByName = byName(htmlFiles)
+	const htmlByStem = byStem(htmlFiles)
+	const svgByName = byName(svgFiles)
+	const svgByStem = byStem(svgFiles)
+
+	const loaded: Partner[] = []
+	for (const [index, [path, xmlText]] of Object.entries(xmlFiles).sort().entries()) {
+		try {
+			loaded.push(buildPartner({
+				fileName: baseName(path),
+				xmlText,
+				index,
+				resolveHtml: (name, stem) => htmlByName.get(name) ?? htmlByStem.get(stem),
+				resolveLogo: (name, stem) => {
+					const svg = svgByName.get(name) ?? svgByStem.get(stem)
+					// Inline rather than linking, so no extra request and no asset path.
+					return svg === undefined ? undefined : `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
+				},
+			}))
+		} catch (error) {
+			// One malformed partner file must not empty the whole tab.
+			console.error(`Could not load partner file ${path}`, error)
+		}
+	}
+
+	return loaded.sort((left, right) => left.sortOrder - right.sortOrder)
+}
+
+export const partners: Partner[] = loadPartners()

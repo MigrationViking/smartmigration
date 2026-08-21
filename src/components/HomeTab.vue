@@ -49,25 +49,48 @@ onMounted(async () => {
 			<img :src="appLogo" alt="" aria-hidden="true">
 		</div>
 		<div class="smartmigration-home__welcome-copy">
-			<p class="smartmigration-home__eyebrow">
-				{{ t('smartmigration', 'SMART Migration') }}
+			<h2>{{ t('smartmigration', 'SMART Migration from MigrateDMS') }}</h2>
+			<p class="smartmigration-home__lead">
+				{{ t('smartmigration', 'Manage file migrations from SharePoint, OneDrive, Teams, and file shares to Nextcloud, with deep discovery, interactive business intelligence, progress tracking, and complete run history.') }}
 			</p>
-			<h2>{{ t('smartmigration', 'About SMART Migration') }}</h2>
-			<p>
-				{{ t('smartmigration', 'Provides a Nextcloud interface for defining and monitoring MigrateDMS SMART Migration jobs.') }}
-			</p>
-			<p>
-				{{ t('smartmigration', 'Create a job for each SharePoint, OneDrive or Teams document library, or file share, and run deep file discovery before you move anything. Interactive business intelligence shows volume, age, structure, and the content that needs attention first. You plan the migration on a complete picture of your data.') }}
-			</p>
-			<p>
-				{{ t('smartmigration', 'The same reporting tracks progress while the migration runs and becomes your documentation of what was moved once it is done. Discovery, migration, and run history stay visible in Nextcloud, with reports delivered to Nextcloud Files.') }}
-			</p>
-			<p>
-				{{ t('smartmigration', 'A SMART Migration partner supplies the server licence, helps you plan the work, and supports you through the migration. Start by choosing a partner.') }}
-			</p>
-			<NcButton variant="primary" @click="emit('showPartners')">
-				{{ t('smartmigration', 'Choose a partner') }}
-			</NcButton>
+
+			<div class="smartmigration-home__sections">
+				<section class="smartmigration-home__section smartmigration-home__section--discover">
+					<h3>{{ t('smartmigration', 'Discover before you move') }}</h3>
+					<p>
+						{{ t('smartmigration', 'Create a job for each SharePoint, OneDrive or Teams document library, or file share. Run deep discovery first and understand your data before making a move.') }}
+					</p>
+					<strong>{{ t('smartmigration', 'Volume. Age. Structure. Attention points.') }}</strong>
+				</section>
+
+				<section class="smartmigration-home__section smartmigration-home__section--migrate">
+					<h3>{{ t('smartmigration', 'Migrate with confidence') }}</h3>
+					<p>
+						{{ t('smartmigration', 'Interactive business intelligence gives you a complete picture for planning, while the same reporting tracks progress throughout the migration.') }}
+					</p>
+					<strong>{{ t('smartmigration', 'One clear view from first discovery to final handover.') }}</strong>
+				</section>
+
+				<section class="smartmigration-home__section smartmigration-home__section--report">
+					<h3>{{ t('smartmigration', 'Keep the record') }}</h3>
+					<p>
+						{{ t('smartmigration', 'Discovery, migration, and run history stay visible in Nextcloud. Reports are delivered to Nextcloud Files and become your documentation of what was moved.') }}
+					</p>
+					<strong>{{ t('smartmigration', 'A living record of your migration.') }}</strong>
+				</section>
+			</div>
+
+			<div class="smartmigration-home__partner-callout">
+				<div>
+					<h3>{{ t('smartmigration', 'Your partner gets you started') }}</h3>
+					<p>
+						{{ t('smartmigration', 'A SMART Migration partner supplies the server licence, helps you plan the work, and supports you through the migration.') }}
+					</p>
+				</div>
+				<NcButton variant="primary" @click="emit('showPartners')">
+					{{ t('smartmigration', 'Choose a partner') }}
+				</NcButton>
+			</div>
 		</div>
 	</section>
 
@@ -155,6 +178,61 @@ onMounted(async () => {
 	line-height: 1.6;
 }
 
+.smartmigration-home__lead {
+	font-size: 1.1rem;
+	font-weight: 600;
+}
+
+.smartmigration-home__sections {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 20px;
+	margin: 32px 0;
+}
+
+.smartmigration-home__section {
+	padding: 4px 0 4px 18px;
+	border-inline-start: 4px solid var(--color-primary-element);
+}
+
+.smartmigration-home__section--discover {
+	border-color: var(--color-element-success);
+}
+
+.smartmigration-home__section--migrate {
+	border-color: var(--color-primary-element);
+}
+
+.smartmigration-home__section--report {
+	border-color: var(--color-element-error);
+}
+
+.smartmigration-home__section h3,
+.smartmigration-home__partner-callout h3 {
+	margin: 0 0 8px;
+	font-size: 1.05rem;
+}
+
+.smartmigration-home__section p,
+.smartmigration-home__partner-callout p {
+	margin: 0 0 12px;
+	line-height: 1.55;
+}
+
+.smartmigration-home__section strong {
+	font-size: 0.9rem;
+}
+
+.smartmigration-home__partner-callout {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	padding: 20px 24px;
+	background: var(--color-background-hover);
+	border-top: 3px solid var(--color-primary-element);
+}
+
 .smartmigration-home__header {
 	display: flex;
 	align-items: center;
@@ -211,6 +289,16 @@ onMounted(async () => {
 
 	.smartmigration-home__welcome-graphic {
 		width: 100%;
+	}
+
+	.smartmigration-home__sections {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+
+	.smartmigration-home__partner-callout {
+		align-items: flex-start;
+		flex-direction: column;
 	}
 
 	.smartmigration-home__summary {

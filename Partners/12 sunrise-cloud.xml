@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id>sunrise-cloud</id>
+  <sortOrder>10</sortOrder>
+  <name>Sunrise Cloud Advisors</name>
+  <country>Australia</country>
+  <services><service>E-Mail</service><service>Calendar</service></services>
+  <address>55 Market Street, Sydney NSW 2000</address>
+  <email>contact@sunrisecloud.example</email>
+  <phone>+61 2 5550 0195</phone>
+  <website>https://www.sunrisecloud.example</website>
+  <logoFile>10 sunrise-cloud.svg</logoFile>
+  <descriptionFile>10 sunrise-cloud.html</descriptionFile>
+  <description>Australian mail and calendar migration with regional data residency evidence captured throughout.</description>
+</partner>
