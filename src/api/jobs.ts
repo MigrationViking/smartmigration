@@ -2,7 +2,7 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
 export type JobMode = 'Discovery' | 'Test Migration' | 'Migration'
-export type JobStatus = 'Hold' | 'Ready' | 'Finished'
+export type JobStatus = 'Hold' | 'Ready' | 'Running' | 'Reporting' | 'Finished'
 export type JobRecurrence = 'None' | 'Daily' | 'Weekly' | 'Monthly'
 export type JobSourceType = 'SharePoint Library' | 'OneDrive' | 'FileShare'
 export type YesNo = 'Yes' | 'No'

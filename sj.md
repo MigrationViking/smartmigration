@@ -5,6 +5,23 @@ test forkert versionsnummer
 test clear
 
 
+Hvis ikke connected.
+vis info om hvad appen kan.
+Og at du skal have en partnber
+ved påartner tab skift lukkes meddelsen.
+samme inbfo på support fanen.
+learn more link (fjern message)
+
+logo i toppen
+ny ikon til apopen. (Leonard)
+Partner fanen:
+Logo Company,Country, Services , website
+Files, E-mail, Calendar
+beskedområde gøres strørre med tlf, email, addresse, beskrivelse
+
+
+
+
 
 syntax check for ur,upnunc etc.
 valiuderin af at alle felter er udfyldt korrekt.
