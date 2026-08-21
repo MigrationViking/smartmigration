@@ -116,10 +116,6 @@ onMounted(load)
 					{{ t('smartmigration', 'Learn more') }}
 				</button>
 			</NcNoteCard>
-
-			<p class="settings-tab__hint">
-				{{ t('smartmigration', 'These values are set by SMART Migration through the API and cannot be edited here.') }}
-			</p>
 		</template>
 	</div>
 </template>
@@ -170,11 +166,5 @@ onMounted(load)
 	color: inherit;
 	text-decoration: underline;
 	cursor: pointer;
-}
-
-.settings-tab__hint {
-	color: var(--color-text-maxcontrast);
-	font-size: 0.85em;
-	margin: 0;
 }
 </style>

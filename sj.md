@@ -4,29 +4,8 @@ test expiration date expired
 test forkert versionsnummer
 test clear
 
-sektion med em,ail i home.
 
-duber til support efter det andet.
-
-
-
-Hvis ikke connected.
-vis info om hvad appen kan.
-Og at du skal have en partnber
-ved påartner tab skift lukkes meddelsen.
-samme inbfo på support fanen.
-learn more link (fjern message)
-
-logo i toppen
 ny ikon til apopen. (Leonard)
-Partner fanen:
-Logo Company,Country, Services , website
-Files, E-mail, Calendar
-beskedområde gøres strørre med tlf, email, addresse, beskrivelse
-
-
-
-
 
 syntax check for ur,upnunc etc.
 valiuderin af at alle felter er udfyldt korrekt.
@@ -39,6 +18,8 @@ delete lave cancel efter delet (er det std.)
 
 Add an API endpoint to set the support and license information in the settingstable.
 SupportName,SupportEmail,SupportCompay,LicenseKey,ExpirationDate
+
+
 
 format description.
 feler links i description.

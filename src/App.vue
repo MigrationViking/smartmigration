@@ -257,7 +257,7 @@ function sortPartners(key: PartnerSortKey) {
 				</div>
 			</div>
 
-			<SupportTab v-else />
+			<SupportTab v-else @show-partners="activeTab = 'partners'" />
 		</div>
 	</div>
 </template>

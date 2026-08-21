@@ -7,8 +7,13 @@ import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import { type License, type SupportContact, fetchLicense, fetchSupportContact } from '../api/settings'
 import { versionStatus } from '../versionStatus'
+import WelcomeInfo from './WelcomeInfo.vue'
 import { isTodayOrPast, toDate } from '../utils/datetime'
 import { SUPPORT_URL } from '../branding'
+
+const emit = defineEmits<{
+	showPartners: []
+}>()
 
 const contact = ref<SupportContact | null>(null)
 const license = ref<License | null>(null)
@@ -97,11 +102,11 @@ onMounted(load)
 					{{ supportCompany }}
 				</p>
 			</div>
-
-			<p class="support-tab__hint">
-				{{ t('smartmigration', 'The support contact is set by SMART Migration through the API and cannot be edited here.') }}
-			</p>
 		</template>
+
+		<hr class="support-tab__major-separator">
+
+		<WelcomeInfo @show-partners="emit('showPartners')" />
 	</div>
 </template>
 
@@ -134,9 +139,12 @@ onMounted(load)
 	margin: 0;
 }
 
-.support-tab__hint {
-	color: var(--color-text-maxcontrast);
-	font-size: 0.85em;
-	margin: 0;
+/* Heavier than the in-page rules: what follows is a different subject entirely. */
+.support-tab__major-separator {
+	width: 100%;
+	margin: 32px 0 8px;
+	border: 0;
+	border-top: 6px solid var(--color-border);
 }
+
 </style>
