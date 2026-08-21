@@ -45,20 +45,29 @@ onMounted(async () => {
 
 <template>
 	<section v-if="!hasLicenseKey" class="smartmigration-home smartmigration-home--welcome">
-		<div class="smartmigration-home__welcome-graphic">
-			<img :src="appLogo" alt="" aria-hidden="true">
+		<div class="smartmigration-home__welcome-header">
+			<img class="smartmigration-home__welcome-logo"
+				:src="appLogo"
+				alt=""
+				aria-hidden="true">
+			<div>
+				<h2>{{ t('smartmigration', 'SMART Migration from MigrateDMS') }}</h2>
+				<p class="smartmigration-home__lead">
+					{{ t('smartmigration', 'Manage file migrations from SharePoint, OneDrive, Teams, and file shares to Nextcloud, with deep discovery, interactive business intelligence, progress tracking, and complete run history.') }}
+				</p>
+			</div>
 		</div>
+
 		<div class="smartmigration-home__welcome-copy">
-			<h2>{{ t('smartmigration', 'SMART Migration from MigrateDMS') }}</h2>
-			<p class="smartmigration-home__lead">
-				{{ t('smartmigration', 'Manage file migrations from SharePoint, OneDrive, Teams, and file shares to Nextcloud, with deep discovery, interactive business intelligence, progress tracking, and complete run history.') }}
-			</p>
 
 			<div class="smartmigration-home__sections">
 				<section class="smartmigration-home__section smartmigration-home__section--discover">
 					<h3>{{ t('smartmigration', 'Discover before you move') }}</h3>
 					<p>
-						{{ t('smartmigration', 'Create a job for each SharePoint, OneDrive or Teams document library, or file share. Run deep discovery first and understand your data before making a move.') }}
+						{{ t('smartmigration', 'Create a job for each SharePoint, OneDrive or Teams document library, or file share. Deep discovery reads the source before anything moves: volume, age profile, folder depth, permissions, version history, and the file types that will need a decision.') }}
+					</p>
+					<p>
+						{{ t('smartmigration', 'You find out what is really there — abandoned content, oversized files, broken permissions — while there is still time to act. Discovery on its own is a complete result, not an unfinished migration.') }}
 					</p>
 					<strong>{{ t('smartmigration', 'Volume. Age. Structure. Attention points.') }}</strong>
 				</section>
@@ -66,7 +75,10 @@ onMounted(async () => {
 				<section class="smartmigration-home__section smartmigration-home__section--migrate">
 					<h3>{{ t('smartmigration', 'Migrate with confidence') }}</h3>
 					<p>
-						{{ t('smartmigration', 'Interactive business intelligence gives you a complete picture for planning, while the same reporting tracks progress throughout the migration.') }}
+						{{ t('smartmigration', 'Interactive business intelligence turns discovery into a plan you can defend: what moves first, what needs cleaning up, what can be left behind, and roughly how long each wave is going to take.') }}
+					</p>
+					<p>
+						{{ t('smartmigration', 'The same reporting follows the migration itself, so throughput, progress, and exceptions stay visible while the work runs — instead of arriving as a surprise in a final report nobody can act on.') }}
 					</p>
 					<strong>{{ t('smartmigration', 'One clear view from first discovery to final handover.') }}</strong>
 				</section>
@@ -74,9 +86,23 @@ onMounted(async () => {
 				<section class="smartmigration-home__section smartmigration-home__section--report">
 					<h3>{{ t('smartmigration', 'Keep the record') }}</h3>
 					<p>
-						{{ t('smartmigration', 'Discovery, migration, and run history stay visible in Nextcloud. Reports are delivered to Nextcloud Files and become your documentation of what was moved.') }}
+						{{ t('smartmigration', 'Discovery results, migration outcomes, and the full run history stay visible inside Nextcloud. Every run records what it touched, when it ran, which settings applied, and what needed attention.') }}
+					</p>
+					<p>
+						{{ t('smartmigration', 'Reports are delivered to Nextcloud Files and become the documentation of the move — the record somebody opens years later to answer where a file came from and why it looks the way it does.') }}
 					</p>
 					<strong>{{ t('smartmigration', 'A living record of your migration.') }}</strong>
+				</section>
+
+				<section class="smartmigration-home__section smartmigration-home__section--groupware">
+					<h3>{{ t('smartmigration', 'Groupware') }}</h3>
+					<p>
+						{{ t('smartmigration', 'This app moves files. E-mail and calendar are handled by an external service your SMART Migration partner delivers alongside them: mailboxes, shared calendars, room resources, and delegate permissions, planned in the same waves as the files.') }}
+					</p>
+					<p>
+						{{ t('smartmigration', 'Not every partner offers it. The Partners tab lists the services each one covers, so you can choose a partner able to take on Files, E-Mail, and Calendar as a single engagement.') }}
+					</p>
+					<strong>{{ t('smartmigration', 'One project. Files, mail, and calendar.') }}</strong>
 				</section>
 			</div>
 
@@ -136,30 +162,30 @@ onMounted(async () => {
 
 <style scoped>
 .smartmigration-home {
-	max-width: 960px;
+	max-width: 1200px;
 	margin: 0 auto;
 }
 
 .smartmigration-home--welcome {
-	display: grid;
-	grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.3fr);
-	gap: 48px;
-	align-items: center;
-	padding: 48px 24px;
+	padding: 40px 24px 48px;
 }
 
-.smartmigration-home__welcome-graphic {
+.smartmigration-home__welcome-header {
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	gap: 28px;
+	margin-block-end: 8px;
 }
 
-.smartmigration-home__welcome-graphic img {
-	display: block;
-	width: 100%;
-	max-width: 360px;
+.smartmigration-home__welcome-logo {
+	flex-shrink: 0;
+	width: 170px;
 	height: auto;
 }
+
+
+
+
 
 .smartmigration-home__eyebrow {
 	margin: 0 0 8px;
@@ -174,7 +200,11 @@ onMounted(async () => {
 }
 
 .smartmigration-home__welcome-copy p:not(.smartmigration-home__eyebrow) {
-	max-width: 680px;
+	line-height: 1.6;
+}
+
+.smartmigration-home__welcome-header .smartmigration-home__lead {
+	max-width: 780px;
 	line-height: 1.6;
 }
 
@@ -185,14 +215,24 @@ onMounted(async () => {
 
 .smartmigration-home__sections {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
+	/* Four pillars side by side where there is room, wrapping before they get too
+	   narrow to read. */
+	grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 	gap: 20px;
 	margin: 32px 0;
 }
 
 .smartmigration-home__section {
+	display: flex;
+	flex-direction: column;
 	padding: 4px 0 4px 18px;
 	border-inline-start: 4px solid var(--color-primary-element);
+}
+
+/* Pins the closing line to the bottom, so uneven copy still ends level. */
+.smartmigration-home__section strong {
+	margin-block-start: auto;
+	padding-block-start: 8px;
 }
 
 .smartmigration-home__section--discover {
@@ -205,6 +245,16 @@ onMounted(async () => {
 
 .smartmigration-home__section--report {
 	border-color: var(--color-element-error);
+}
+
+/*
+ * Groupware is the odd one out: it is delivered by a partner rather than by this
+ * app, so it gets a heavier rule than the three core pillars.
+ */
+.smartmigration-home__section--groupware {
+	padding-inline-start: 22px;
+	border-inline-start-width: 9px;
+	border-color: var(--color-element-warning);
 }
 
 .smartmigration-home__section h3,

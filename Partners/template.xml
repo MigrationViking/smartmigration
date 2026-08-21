@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner>
+  <id></id>
+  <sortOrder></sortOrder>
+  <name></name>
+  <country></country>
+  <services>
+    <service></service>
+  </services>
+  <address></address>
+  <email></email>
+  <phone></phone>
+  <website></website>
+  <logoFile>template.svg</logoFile>
+  <descriptionFile>template.html</descriptionFile>
+  <descriptionLayout>sections</descriptionLayout>
+  <description></description>
+</partner>

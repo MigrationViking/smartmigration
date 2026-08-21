@@ -1,29 +1,44 @@
 # Partner files
 
-This folder is the source of the Partners tab. Vite inlines it at build time, so
-adding or changing a partner means editing files here and running `npm run build`.
-
-The folder contains the first twelve demo partners. Partners 02 and 03 specialise
-in operational resilience and regulatory controls: Operational Resilience Partners
-and Regulatory Control Lab.
 
 ## Naming
 
-Each partner is three files sharing one numbered stem:
+Each partner is three files sharing one descriptive stem:
 
 ```
-01 harborview-it.xml     partner data
-01 harborview-it.svg     logo
-01 harborview-it.html    formatted presentation
+harborview-it.xml     partner data
+harborview-it.svg     logo
+harborview-it.html    formatted presentation
 ```
 
-**The leading number sets the initial sort order of the partner table.** Renumber
-the files to reorder the list. A partner whose files carry no prefix falls back to
-the `<sortOrder>` element in its XML, then to the order the files were read in.
 
-The two regulated-services examples use the additional `governance-grid` and
-`assurance-matrix` layouts. These layouts are deliberately different from the
-standard sections, spotlight, columns, banner, and timeline examples.
+## Partner template
+
+The files `template.xml`, `template.html`, and `template.svg` are an empty starter
+set intended to fill out and return together:
+
+```
+template.xml     partner information and contact data
+template.html    plain HTML presentation text
+template.svg     logo placeholder
+```
+
+The partner should copy and rename all three files with the same descriptive stem,
+for example:
+
+```
+example-consulting.xml
+example-consulting.html
+example-consulting.svg
+```
+
+They should fill the empty elements in the XML, replace the logo SVG, and replace
+the placeholder text in the HTML. The XML must keep the `logoFile` and
+`descriptionFile` values aligned with the returned filenames. The three completed
+files can then be placed in this folder and included in the next app build.
+
+The template XML is intentionally not a partner until its `name` is filled in;
+the loader skips it while it remains empty.
 
 ## XML
 
@@ -41,3 +56,10 @@ handlers — is stripped. Links keep only `http:`, `https:`, `mailto:` and `tel:
 
 A block that sets `background-color` should always set `color` too, so it reads
 correctly in both the light and dark Nextcloud themes.
+
+## Showcase PDFs
+
+`partner-showcase.pdf` and `partner-showcase-dark.pdf` show how the partner HTML
+presentations render in light and dark themes. The PDF previews use a compact
+presentation area similar to the app detail panel rather than displaying the full
+HTML page height.

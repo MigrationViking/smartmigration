@@ -4,12 +4,11 @@ test expiration date expired
 test forkert versionsnummer
 test clear
 
-skub sektion op
-scroll af profiltekst
 sektion med em,ail i home.
+
 duber til support efter det andet.
 
-dora partner. (2 stk)
+
 
 Hvis ikke connected.
 vis info om hvad appen kan.
