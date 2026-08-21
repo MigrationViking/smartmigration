@@ -402,7 +402,7 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 							:model-value="toDate(job.scheduledDate)"
 							type="datetime-local"
 							:label="t('smartmigration', 'Scheduled Date')"
-							label-outside
+							hide-label
 							@update:model-value="updateScheduledDate(job, $event)" />
 					</td>
 					<td>{{ job.result }}</td>
@@ -531,9 +531,8 @@ async function updateScheduledDate(job: Job, date: Date | null) {
  * Colour-code the status control's label. Reaching into NcButton's text element is
  * the only way to colour an NcActions menu-name.
  *
- * One distinct hue per state — green / orange / blue / violet — plus Hold, which
- * keeps the default text colour. Bold makes the colour read at a glance down the
- * column.
+ * One distinct hue per state — green / orange / blue / violet — plus Finished,
+ * which keeps the default text colour.
  *
  * These are local tokens rather than the server's --color-element-* family, which
  * is too muted for the brightness wanted here. That means dark mode is not free:
@@ -544,7 +543,7 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 	--smartmigration-status-ready: #0fbf0f;
 	--smartmigration-status-running: #ff8a00;
 	--smartmigration-status-reporting: #1a9bff;
-	--smartmigration-status-finished: #a259ff;
+	--smartmigration-status-hold: #a259ff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -552,7 +551,7 @@ async function updateScheduledDate(job: Job, date: Date | null) {
 		--smartmigration-status-ready: #3ee83e;
 		--smartmigration-status-running: #ffab2e;
 		--smartmigration-status-reporting: #5cbcff;
-		--smartmigration-status-finished: #c08cff;
+		--smartmigration-status-hold: #c08cff;
 	}
 }
 
@@ -560,14 +559,7 @@ html[data-themes~="dark"] .jobs-tab {
 	--smartmigration-status-ready: #3ee83e;
 	--smartmigration-status-running: #ffab2e;
 	--smartmigration-status-reporting: #5cbcff;
-	--smartmigration-status-finished: #c08cff;
-}
-
-.jobs-tab__status--ready :deep(.button-vue__text),
-.jobs-tab__status--running :deep(.button-vue__text),
-.jobs-tab__status--reporting :deep(.button-vue__text),
-.jobs-tab__status--finished :deep(.button-vue__text) {
-	font-weight: bold;
+	--smartmigration-status-hold: #c08cff;
 }
 
 .jobs-tab__status--ready :deep(.button-vue__text) {
@@ -582,8 +574,8 @@ html[data-themes~="dark"] .jobs-tab {
 	color: var(--smartmigration-status-reporting);
 }
 
-.jobs-tab__status--finished :deep(.button-vue__text) {
-	color: var(--smartmigration-status-finished);
+.jobs-tab__status--hold :deep(.button-vue__text) {
+	color: var(--smartmigration-status-hold);
 }
 
 .jobs-tab__title-col {

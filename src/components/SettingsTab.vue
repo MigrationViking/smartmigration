@@ -67,6 +67,33 @@ onMounted(load)
 				</p>
 			</div>
 
+			<div class="settings-tab__field">
+				<label>{{ t('smartmigration', 'Version') }}</label>
+				<p class="settings-tab__value">
+					{{ currentSmVersion }}
+				</p>
+			</div>
+
+			<div class="settings-tab__field">
+				<label>{{ t('smartmigration', 'Version required by this app') }}</label>
+				<p class="settings-tab__value">
+					{{ requiredSmartVersion }}
+				</p>
+			</div>
+
+			<NcNoteCard v-if="versionUnreported" type="info">
+				{{ t('smartmigration', 'This app needs a remote SMART Migration server to do the actual work. Install SMART Migration version {version} and point it at this Nextcloud to get started.', { version: requiredSmartVersion }) }}
+				<button class="settings-tab__link" @click="emit('showPartners')">
+					{{ t('smartmigration', 'Learn more') }}
+				</button>
+			</NcNoteCard>
+			<NcNoteCard v-else-if="versionsMatch" type="success">
+				{{ t('smartmigration', 'The remote SMART Migration server is running the required version. The setup is ready to use.') }}
+			</NcNoteCard>
+			<NcNoteCard v-else type="error">
+				{{ t('smartmigration', 'The remote SMART Migration server is not running the required version. The two versions must match for the setup to function. Please update the SMART Migration server to version {version}.', { version: requiredSmartVersion }) }}
+			</NcNoteCard>
+
 			<hr class="settings-tab__separator">
 
 			<div class="settings-tab__field">
@@ -83,40 +110,11 @@ onMounted(load)
 				</p>
 			</div>
 
-			<hr class="settings-tab__separator">
-
-			<div class="settings-tab__field">
-				<label>{{ t('smartmigration', 'Current Version') }}</label>
-				<p class="settings-tab__value">
-					{{ currentSmVersion }}
-				</p>
-			</div>
-
-			<div class="settings-tab__field">
-				<label>{{ t('smartmigration', 'Required Version') }}</label>
-				<p class="settings-tab__value">
-					{{ requiredSmartVersion }}
-				</p>
-			</div>
-
 			<NcNoteCard v-if="licenseExpired" type="error">
 				{{ t('smartmigration', 'The SMART Migration licence has expired, so this app is no longer being serviced.') }}
 				<button class="settings-tab__link" @click="emit('showSupport')">
 					{{ t('smartmigration', 'Learn more') }}
 				</button>
-			</NcNoteCard>
-
-			<NcNoteCard v-if="versionUnreported" type="info">
-				{{ t('smartmigration', 'This app needs a remote SMART Migration server to do the actual work. Install SMART Migration version {version} and point it at this Nextcloud to get started.', { version: requiredSmartVersion }) }}
-				<button class="settings-tab__link" @click="emit('showPartners')">
-					{{ t('smartmigration', 'Learn more') }}
-				</button>
-			</NcNoteCard>
-			<NcNoteCard v-else-if="versionsMatch" type="success">
-				{{ t('smartmigration', 'The remote SMART Migration server is running the required version. The setup is ready to use.') }}
-			</NcNoteCard>
-			<NcNoteCard v-else type="error">
-				{{ t('smartmigration', 'The remote SMART Migration server is not running the required version. The two versions must match for the setup to function. Please update the SMART Migration server to version {version}.', { version: requiredSmartVersion }) }}
 			</NcNoteCard>
 
 			<p class="settings-tab__hint">
