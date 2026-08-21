@@ -10,11 +10,7 @@ ny ikon til apopen. (Leonard)
 syntax check for ur,upnunc etc.
 valiuderin af at alle felter er udfyldt korrekt.
 
-farvekode doprdværdier
-
-Create new job knap
-
-delete lave cancel efter delet (er det std.)
+delete lave cancel efter delet (er det std.) but om!!""
 
 Add an API endpoint to set the support and license information in the settingstable.
 SupportName,SupportEmail,SupportCompay,LicenseKey,ExpirationDate
@@ -36,8 +32,6 @@ Add to the app settings "RequiredSMVersion"   (SM is short for SMART Migration).
 
 rød besked. hvis mismatch på home.
 
-
-firma,email og navn under support.
 
 i sm: rename sm mappen til Teams app og NC app
 

@@ -20,8 +20,16 @@ const emit = defineEmits<{
 			<div>
 				<h2>{{ t('smartmigration', 'SMART Migration from MigrateDMS') }}</h2>
 				<p class="smartmigration-home__lead">
-					{{ t('smartmigration', 'Manage file migrations from SharePoint, OneDrive, Teams, and file shares to Nextcloud, with deep discovery, interactive business intelligence, progress tracking, and complete run history. The same jobs serve digital operational resilience: keep selected business-critical Microsoft 365 content replicated into Nextcloud, so it is there when needed.') }}
+					{{ t('smartmigration', 'Manage file migrations from SharePoint, OneDrive, Teams, and file shares to Nextcloud, with deep discovery, interactive business intelligence, progress tracking, and complete run history. The same jobs serve digital operational resilience.') }}
 				</p>
+				<p class="smartmigration-home__welcome-note">
+					{{ t('smartmigration', 'This app is where the work is defined and followed. The work itself runs on the SMART Migration server, installed on the machine that performs the BI data discoveries and migrations and connected to this Nextcloud — that is where all the logic lives. A partner supplies the SMART Migration server licence, helps you plan the work, and supports you.') }}
+				</p>
+				<NcButton class="smartmigration-home__welcome-action"
+					variant="primary"
+					@click="emit('showPartners')">
+					{{ t('smartmigration', 'Choose a partner') }}
+				</NcButton>
 			</div>
 		</div>
 
@@ -73,17 +81,6 @@ const emit = defineEmits<{
 				</section>
 			</div>
 
-			<div class="smartmigration-home__partner-callout">
-				<div>
-					<h3>{{ t('smartmigration', 'Your partner gets you started') }}</h3>
-					<p>
-						{{ t('smartmigration', 'A SMART Migration partner supplies the server licence, helps you plan the work, and supports you through the migration.') }}
-					</p>
-				</div>
-				<NcButton variant="primary" @click="emit('showPartners')">
-					{{ t('smartmigration', 'Choose a partner') }}
-				</NcButton>
-			</div>
 
 			<section class="smartmigration-home__resilience">
 				<h3>{{ t('smartmigration', 'Digital operational resilience and DORA') }}</h3>
@@ -168,6 +165,16 @@ const emit = defineEmits<{
 	line-height: 1.6;
 }
 
+.smartmigration-home__welcome-note {
+	max-width: 780px;
+	margin-block-start: 10px;
+	line-height: 1.6;
+}
+
+.smartmigration-home__welcome-action {
+	margin-block-start: 16px;
+}
+
 .smartmigration-home__lead {
 	font-size: 1.1rem;
 	font-weight: 600;
@@ -217,14 +224,12 @@ const emit = defineEmits<{
 	border-color: var(--color-element-warning);
 }
 
-.smartmigration-home__section h3,
-.smartmigration-home__partner-callout h3 {
+.smartmigration-home__section h3 {
 	margin: 0 0 8px;
 	font-size: 1.05rem;
 }
 
-.smartmigration-home__section p,
-.smartmigration-home__partner-callout p {
+.smartmigration-home__section p {
 	margin: 0 0 12px;
 	line-height: 1.55;
 }
@@ -286,16 +291,6 @@ const emit = defineEmits<{
 	line-height: 1.7;
 }
 
-.smartmigration-home__partner-callout {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 24px;
-	padding: 20px 24px;
-	background: var(--color-background-hover);
-	border-top: 3px solid var(--color-primary-element);
-}
-
 @media (max-width: 700px) {
 	.smartmigration-home--welcome {
 		padding: 24px 0;
@@ -304,11 +299,6 @@ const emit = defineEmits<{
 	.smartmigration-home__sections {
 		grid-template-columns: 1fr;
 		gap: 24px;
-	}
-
-	.smartmigration-home__partner-callout {
-		align-items: flex-start;
-		flex-direction: column;
 	}
 }
 </style>
